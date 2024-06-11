@@ -3,6 +3,11 @@ import App from "./App.vue";
 import VueAxios from "vue-axios";
 import axios from "axios";
 
+
+import './scss/form-style.scss';
+
+
+
 import routes from "./routes";
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
@@ -38,6 +43,15 @@ import {
   LayoutPlugin,
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faClock, faHeart, faLeaf, faSeedling } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faClock, faHeart, faLeaf, faSeedling);
+
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
 
 axios.interceptors.request.use(
   function(config) {

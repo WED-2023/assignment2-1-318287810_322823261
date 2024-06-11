@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <router-link
     :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
     class="recipe-preview"
@@ -35,6 +35,13 @@ export default {
       type: Object,
       required: true
     }
+
+  },
+  methods: {
+    toggleFavorite() {
+      this.$emit('toggle-favorite', this.recipe.id);
+    }
+
 
     // id: {
     //   type: Number,
@@ -137,5 +144,111 @@ export default {
   width: 90px;
   display: table-cell;
   text-align: center;
+}
+</style>
+
+
+ -->
+
+
+ <template>
+  <div class="recipe-preview">
+    <router-link
+      :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
+      class="recipe-body"
+    >
+      <img :src="recipe.image" class="recipe-image" />
+    </router-link>
+    <div class="recipe-footer">
+      <div :title="recipe.title" class="recipe-title">
+        {{ recipe.title }}
+      </div>
+      <ul class="recipe-overview">
+        <li><font-awesome-icon icon="clock" /> {{ recipe.readyInMinutes }} דקות</li>
+        <li><font-awesome-icon icon="heart" /> {{ recipe.aggregateLikes }}</li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    recipe: {
+      type: Object,
+      required: true
+    }
+  }
+};
+</script>
+
+<style scoped>
+.recipe-preview {
+  display: inline-block;
+  width: 100%;
+  max-width: 300px;
+  margin: 10px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recipe-preview:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.recipe-body {
+  position: relative;
+  overflow: hidden;
+}
+
+.recipe-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.recipe-preview:hover .recipe-image {
+  transform: scale(1.1);
+}
+
+.recipe-footer {
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recipe-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.recipe-overview {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.recipe-overview li {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Adds a small space between the icon and the text */
+}
+
+.recipe-overview li font-awesome-icon {
+  font-size: 1.2em; /* Adjust the size of the icons */
 }
 </style>

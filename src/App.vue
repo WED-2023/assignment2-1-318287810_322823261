@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <div id="nav" ref="nav">
       <router-link :to="{ name: 'main' }">Vue Recipes</router-link>|
       <router-link :to="{ name: 'search' }">Search</router-link>|
       {{ !$root.store.username }}
@@ -13,13 +13,19 @@
         {{ $root.store.username }}: <button @click="Logout">Logout</button>|
       </span>
     </div>
+    <main ref="main">
     <router-view />
+    </main>
   </div>
 </template>
 
 <script>
 export default {
   name: "App",
+  mounted() {
+    // Set the top margin of the main content dynamically based on the nav bar height
+    this.$refs.main.style.marginTop = `${this.$refs.nav.offsetHeight}px`;
+  },
   methods: {
     Logout() {
       this.$root.store.logout();
@@ -45,8 +51,18 @@ export default {
 }
 
 #nav {
-  padding: 30px;
+  padding: 10px 30px;
+  position: fixed; /* Position the nav bar fixed */
+  top: 0; /* Align it to the top of the page */
+  width: 100%; /* Make it span the full width */
+  background-color: #fff; /* Background color */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional shadow for better visibility */
+  z-index: 1000; /* Make sure it is on top of other content */
 }
+
+// #nav {
+//   padding: 30px;
+// }
 
 #nav a {
   font-weight: bold;
@@ -56,4 +72,5 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
 </style>
