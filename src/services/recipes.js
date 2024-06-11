@@ -4,15 +4,13 @@ import recipe_preview from "../assets/mocks/recipe_preview.json";
 
 
 export function mockGetRecipesPreview(amount = 1) {
-  let recipes = [];
-  for(let i = 0; i < amount; i++){
-    recipes.push(recipe_preview);
+  const recipes = recipesPreview.slice(0, amount);
+  return { data: { recipes: recipes } };
   }
 
-  return { data: { recipes: recipes } };
-}
 
 export function mockGetRecipeFullDetails(recipeId) {
-    return { data: { recipe: recipe_full_view } } ;
+  const recipe = recipeFullView.find(recipe => recipe.id === recipeId);
+  return { data: { recipe: recipe } };
   }
   

@@ -1,25 +1,44 @@
 <template>
   <div id="app">
     <div id="nav">
+      <!-- Links for everyone -->
       <router-link :to="{ name: 'main' }">Vue Recipes</router-link>|
       <router-link :to="{ name: 'search' }">Search</router-link>|
-      {{ !$root.store.username }}
+      <router-link :to="{ name: 'about' }">About</router-link>|
+
+      <!-- Links for offline users -->
       <span v-if="!$root.store.username">
-        Guest:
+        Hello Guest |
         <router-link :to="{ name: 'register' }">Register</router-link>|
         <router-link :to="{ name: 'login' }">Login</router-link>|
       </span>
+
+      <!-- Links for logged-in users -->
       <span v-else>
-        {{ $root.store.username }}: <button @click="Logout">Logout</button>|
+        {{ $root.store.username }} |
+        <b-dropdown id="dropdown-1" text="Personal Area" variant="link" no-caret>
+        <b-dropdown-item :to="{ name: 'favorites' }">My favorite recipes</b-dropdown-item>
+        <b-dropdown-item :to="{ name: 'my-recipes' }">My recipes</b-dropdown-item>
+        <b-dropdown-item :to="{ name: 'family-recipes' }">My family recipes</b-dropdown-item>
+        </b-dropdown>|
+        <router-link :to="{ name: 'create-recipe' }">New Recipe</router-link>|
+        <button @click="Logout">Logout</button>|
       </span>
     </div>
     <router-view />
   </div>
 </template>
 
+
 <script>
+import { BDropdown, BDropdownItem } from 'bootstrap-vue';
+
 export default {
   name: "App",
+  components: {
+    BDropdown,
+    BDropdownItem,
+  },
   methods: {
     Logout() {
       this.$root.store.logout();
@@ -33,7 +52,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/scss/form-style.scss";
 
 #app {
@@ -45,7 +64,7 @@ export default {
 }
 
 #nav {
-  padding: 30px;
+  padding: 1rem;
 }
 
 #nav a {
@@ -56,4 +75,18 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+.logout-btn {
+  background: none;
+  border: none;
+  color: #2c3e50;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0;
+}
+
+.logout-btn:hover {
+  color: #42b983;
+}
 </style>
+
+
