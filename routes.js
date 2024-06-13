@@ -33,15 +33,9 @@ const routes = [
     component: () => import("./pages/RecipeViewPage"),
   },
   {
-<<<<<<< HEAD
     path: "/favorites",
     name: "favorites",
     component: () => import("./pages/FavoritesPage"),
-=======
-  path: "/favorites",
-  name: "favorites",
-  component: () => import("./pages/FavoritesPage"),
->>>>>>> 666adae821f8f65fa65df85945146e188ea38efb
   },
   {
     path: "/my-recipes",
@@ -59,11 +53,7 @@ const routes = [
     component: () => import("./pages/CreateRecipePage"),
   },
   {
-<<<<<<< HEAD
     path: "*", // This should always be the last route
-=======
-    path: "*",
->>>>>>> 666adae821f8f65fa65df85945146e188ea38efb
     name: "notFound",
     component: NotFound,
   },

@@ -37,8 +37,6 @@ Vue.use(Vuelidate);
   LayoutPlugin,
 ].forEach((x) => Vue.use(x));
 
-<<<<<<< HEAD
-=======
 axios.interceptors.request.use(
   function(config) {
     // Do something before request is sent
@@ -63,7 +61,6 @@ axios.interceptors.response.use(
 );
 
 Vue.use(VueAxios, axios);
->>>>>>> 666adae821f8f65fa65df85945146e188ea38efb
 const router = new VueRouter({
   routes,
 });
@@ -84,12 +81,8 @@ const shared_data = {
     this.username = undefined;
   },
 };
-<<<<<<< HEAD
-
-=======
 console.log(shared_data);
 // Vue.prototype.$root.store = shared_data;
->>>>>>> 666adae821f8f65fa65df85945146e188ea38efb
 Vue.mixin({
   data() {
     return {
