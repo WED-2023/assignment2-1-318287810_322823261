@@ -6,12 +6,16 @@
         <img :src="recipe.image" class="center" />
       </div>
       <div class="recipe-body">
+        <div class="mb-3">
+          <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
+          <div>Likes: {{ recipe.aggregateLikes }} likes</div>
+          <div>Servings: {{ recipe.servings }}</div>
+          <div v-if="recipe.vegan">Vegan</div>
+          <div v-if="recipe.vegetarian">Vegetarian</div>
+          <div v-if="recipe.glutenFree">Gluten Free</div>
+        </div>
         <div class="wrapper">
           <div class="wrapped">
-            <div class="mb-3">
-              <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.aggregateLikes }} likes</div>
-            </div>
             Ingredients:
             <ul>
               <li
@@ -62,7 +66,7 @@ export default {
         //   }
         // );
 
-        response = mockGetRecipeFullDetails(this.$route.params.recipeId);
+        response = mockGetRecipeFullDetails(this.$route.params.id);
 
         // console.log("response.status", response.status);
         if (response.status !== 200) this.$router.replace("/NotFound");
@@ -79,7 +83,11 @@ export default {
         aggregateLikes,
         readyInMinutes,
         image,
-        title
+        title,
+        servings,
+        vegan,
+        vegetarian,
+        glutenFree
       } = response.data.recipe;
 
       let _instructions = analyzedInstructions
@@ -97,7 +105,11 @@ export default {
         aggregateLikes,
         readyInMinutes,
         image,
-        title
+        title,
+        servings,
+        vegan,
+        vegetarian,
+        glutenFree
       };
 
       this.recipe = _recipe;
@@ -109,11 +121,32 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.recipe-header {
+  text-align: center;
+}
+.recipe-header img {
+  max-width: 100%;
+  height: auto;
+}
+.recipe-body {
+  margin-top: 20px;
+}
 .wrapper {
   display: flex;
+  justify-content: space-between;
 }
 .wrapped {
+  flex: 1;
+  margin-right: 10px;
+}
+.wrapped:last-child {
   width: 50%;
+  margin-right: 0;
 }
 .center {
   display: block;

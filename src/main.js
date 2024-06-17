@@ -5,7 +5,7 @@ import axios from "axios";
 
 
 import './scss/form-style.scss';
-
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 
 
 import routes from "./routes";
@@ -18,6 +18,10 @@ const router = new VueRouter({
 import Vuelidate from "vuelidate";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
+
+Vue.use(VueRouter);
+Vue.use(VueAxios, axios);
+
 import {
   FormGroupPlugin,
   FormPlugin,
@@ -30,6 +34,7 @@ import {
   ToastPlugin,
   LayoutPlugin,
 } from "bootstrap-vue";
+
 [
   FormGroupPlugin,
   FormPlugin,
@@ -42,16 +47,19 @@ import {
   ToastPlugin,
   LayoutPlugin,
 ].forEach((x) => Vue.use(x));
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin);
 Vue.use(Vuelidate);
+Vue.prototype.$axios = axios
+Vue.config.productionTip = false
 
 import { library } from '@fortawesome/fontawesome-svg-core';
+import { faClock, faHeart, faLeaf, faCarrot, faBreadSlice, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faClock, faHeart, faLeaf, faSeedling } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faClock, faHeart, faLeaf, faSeedling);
+library.add(faClock, faHeart, faLeaf, faCarrot, faBreadSlice, faThumbsUp);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
-
 
 axios.interceptors.request.use(
   function(config) {
@@ -77,6 +85,9 @@ axios.interceptors.response.use(
 );
 
 Vue.use(VueAxios, axios);
+// const router = new VueRouter({
+//   routes,
+// });
 
 Vue.config.productionTip = false;
 
@@ -97,8 +108,7 @@ const shared_data = {
 console.log(shared_data);
 // Vue.prototype.$root.store = shared_data;
 
-new Vue({
-  router,
+Vue.mixin({
   data() {
     return {
       store: shared_data,
@@ -116,5 +126,8 @@ new Vue({
       });
     },
   },
+});
+new Vue({
+  router,
   render: (h) => h(App),
 }).$mount("#app");

@@ -1,20 +1,21 @@
-<!-- <template>
+<template>
   <b-container>
     <h3>
       {{ title }}:
       <slot></slot>
     </h3>
     <b-row>
-      <b-col v-for="r in recipes" :key="r.id" cols="12" md="4" lg="3">
+      <b-col v-for="r in recipes" :key="r.id">
         <RecipePreview class="recipePreview" :recipe="r" />
       </b-col>
     </b-row>
+    <router-link v-if="showButton" :to="{ name: 'randomRecipes' }" tag="button">Show More Random Recipes</router-link>
   </b-container>
 </template>
 
 <script>
 import RecipePreview from "./RecipePreview.vue";
-// import { mockGetRecipesPreview } from "../services/recipes.js";
+import { mockGetRecipesPreview } from "../services/recipes.js";
 export default {
   name: "RecipePreviewList",
   components: {
@@ -28,7 +29,8 @@ export default {
   },
   data() {
     return {
-      recipes: []
+      recipes: [],
+      showButton: false
     };
   },
   mounted() {
@@ -37,62 +39,18 @@ export default {
   methods: {
     async updateRecipes() {
       try {
-        // const response = await this.axios.get(
-        //   this.$root.store.server_domain + "/recipes/random",
-        // );
-
         const amountToFetch = 6; // Set this to how many recipes you want to fetch
         const response = mockGetRecipesPreview(amountToFetch);
 
-
-        console.log(response);
         const recipes = response.data.recipes;
-        console.log(recipes);
         this.recipes = [];
         this.recipes.push(...recipes);
+
+        // Check if there are more recipes available to show
+        this.showButton = true; // Assuming there are always more random recipes to show for now
       } catch (error) {
         console.log(error);
       }
-    }
-  }
-};
-</script>
-
-<style lang="scss" scoped>
-.container {
-  min-height: 400px;
-}
-</style> -->
-
-<template>
-  <b-container>
-    <h3>
-      {{ title }}:
-      <slot></slot>
-    </h3>
-    <b-row>
-      <b-col v-for="r in recipes" :key="r.id" cols="12" md="4" lg="3">
-        <RecipePreview class="recipePreview" :recipe="r" />
-      </b-col>
-    </b-row>
-  </b-container>
-</template>
-
-<script>
-import RecipePreview from "./RecipePreview.vue";
-export default {
-  name: "RecipePreviewList",
-  components: {
-    RecipePreview
-  },
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    recipes: {
-      type: Array,
-      required: true
     }
   }
 };
