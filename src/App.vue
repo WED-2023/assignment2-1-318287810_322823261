@@ -8,6 +8,7 @@
         Guest:
         <router-link :to="{ name: 'register' }">Register</router-link>|
         <router-link :to="{ name: 'login' }">Login</router-link>|
+        <router-link :to="{ name: 'AboutPage' }">AboutPage</router-link>|
       </span>
       <span v-else>
         {{ $root.store.username }}: <button @click="Logout">Logout</button>|
@@ -60,9 +61,9 @@ export default {
   z-index: 1000; /* Make sure it is on top of other content */
 }
 
-// #nav {
-//   padding: 30px;
-// }
+#nav {
+  padding: 30px;
+}
 
 #nav a {
   font-weight: bold;

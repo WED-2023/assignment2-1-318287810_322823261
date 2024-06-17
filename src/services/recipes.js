@@ -6,7 +6,10 @@ import recipe_preview from "../assets/mocks/recipe_preview.json";
 export function mockGetRecipesPreview(amount = 1) {
   let recipes = [];
   for(let i = 0; i < amount; i++){
-    recipes.push(recipe_preview);
+    recipes.push({...recipe_preview,
+      vegan: i % 2 === 0,
+      vegetarian: i % 2 !== 0,
+      glutenFree: i % 3 === 0});
   }
 
   return { data: { recipes: recipes } };
