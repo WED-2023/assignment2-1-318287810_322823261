@@ -1,21 +1,34 @@
 <template>
   <div id="app">
-    <div id="nav" ref="nav">
-      <router-link :to="{ name: 'main' }">Vue Recipes</router-link>|
-      <router-link :to="{ name: 'search' }">Search</router-link>|
-      {{ !$root.store.username }}
-      <span v-if="!$root.store.username">
-        Guest:
-        <router-link :to="{ name: 'register' }">Register</router-link>|
-        <router-link :to="{ name: 'login' }">Login</router-link>|
-        <router-link :to="{ name: 'AboutPage' }">AboutPage</router-link>|
-      </span>
-      <span v-else>
-        {{ $root.store.username }}: <button @click="Logout">Logout</button>|
-      </span>
-    </div>
+    <b-navbar toggleable="lg" type="dark" variant="info">
+      <b-navbar-brand href="#">Vue Recipes</b-navbar-brand>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item :to="{ name: 'main' }">Home</b-nav-item>
+          <b-nav-item :to="{ name: 'search' }">Search</b-nav-item>
+          <b-nav-item :to="{ name: 'AboutPage' }">About</b-nav-item>
+        </b-navbar-nav>
+
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item v-if="!$root.store.username" disabled>Hello, Guest</b-nav-item>
+          <b-nav-item v-if="!$root.store.username" :to="{ name: 'login' }">Login</b-nav-item>
+          <b-nav-item v-if="!$root.store.username" :to="{ name: 'register' }">Register</b-nav-item>
+          
+          <b-nav-item-dropdown v-if="$root.store.username" right>
+            <template #button-content>{{ $root.store.username }}</template>
+            <b-dropdown-item :to="{ name: 'favorites' }">My Favorite Recipes</b-dropdown-item>
+            <b-dropdown-item :to="{ name: 'my-recipes' }">My Recipes</b-dropdown-item>
+            <b-dropdown-item :to="{ name: 'family-recipes' }">Family Recipes</b-dropdown-item>
+          </b-nav-item-dropdown>
+          <b-nav-item v-if="$root.store.username" :to="{ name: 'create-recipe' }">Create Recipe</b-nav-item>
+          <b-button v-if="$root.store.username" @click="logout" variant="outline-light">Logout</b-button>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+
     <main ref="main">
-    <router-view />
+      <router-view />
     </main>
   </div>
 </template>
@@ -23,15 +36,10 @@
 <script>
 export default {
   name: "App",
-  mounted() {
-    // Set the top margin of the main content dynamically based on the nav bar height
-    this.$refs.main.style.marginTop = `${this.$refs.nav.offsetHeight}px`;
-  },
   methods: {
-    Logout() {
+    logout() {
       this.$root.store.logout();
       this.$root.toast("Logout", "User logged out successfully", "success");
-
       this.$router.push("/").catch(() => {
         this.$forceUpdate();
       });
@@ -61,10 +69,6 @@ export default {
   z-index: 1000; /* Make sure it is on top of other content */
 }
 
-#nav {
-  padding: 30px;
-}
-
 #nav a {
   font-weight: bold;
   color: #2c3e50;
@@ -74,4 +78,7 @@ export default {
   color: #42b983;
 }
 
+main {
+  padding-top: 60px; /* Allow space for the fixed navbar */
+}
 </style>

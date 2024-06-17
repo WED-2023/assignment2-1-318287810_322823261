@@ -13,7 +13,7 @@ const routes = [
     component: () => import("./pages/RegisterPage"),
   },
   {
-    path: "/login", // Define the login page route once
+    path: "/login",
     name: "login",
     component: () => import("./pages/LoginPage"),
   },
@@ -32,28 +32,28 @@ const routes = [
     name: "recipe",
     component: () => import("./pages/RecipeViewPage"),
   },
-  // {
-  //   path: "/favorites",
-  //   name: "favorites",
-  //   component: () => import("./pages/FavoritesPage"),
-  // },
-  // {
-  //   path: "/my-recipes",
-  //   name: "my-recipes",
-  //   component: () => import("./pages/MyRecipesPage"),
-  // },
-  // {
-  //   path: "/family-recipes",
-  //   name: "family-recipes",
-  //   component: () => import("./pages/FamilyRecipesPage"),
-  // },
   {
     path: "/create-recipe",
     name: "create-recipe",
-    component: () => import("./pages/CreateRecipeModal")
+    component: () => import("./pages/CreateRecipeModal"),
   },
   {
-    path: "*", // This should always be the last route
+    path: "/favorites",
+    name: "favorites",
+    component: () => import("./pages/FavoritesPage"),
+  },
+  {
+    path: "/my-recipes",
+    name: "my-recipes",
+    component: () => import("./pages/MyRecipesPage"),
+  },
+  {
+    path: "/family-recipes",
+    name: "family-recipes",
+    component: () => import("./pages/FamilyRecipesPage"),
+  },
+  {
+    path: "*",
     name: "notFound",
     component: NotFound,
   },

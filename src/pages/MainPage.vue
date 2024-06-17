@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <h1 class="title">Main Page</h1>
-    <RecipePreviewList title="Randome Recipes" class="RandomRecipes center" />
-    <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to vue this</router-link>
+    <RecipePreviewList title="Random Recipes" class="RandomRecipes center" />
+    <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to view this</router-link>
     <b-button @click="showModal" variant="primary">Create Recipe</b-button>
     <CreateRecipeModal ref="createRecipeModal" />
     {{ !$root.store.username }}
@@ -25,16 +25,18 @@
 
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
-import CreateRecipeModal from '@/pages/CreateRecipeModal.vue';//\src\pages\CreateRecipeModal.vue
+import CreateRecipeModal from "@/pages/CreateRecipeModal.vue"; // \src\pages\CreateRecipeModal.vue
+
 export default {
   components: {
     RecipePreviewList,
+    CreateRecipeModal, // הוספת המודאל לרשימת הקומפוננטים המיובאים
   },
   methods: {
     showModal() {
       console.log('Opening modal'); // לוג לפתיחת המודאל
       if (this.$refs.createRecipeModal && this.$refs.createRecipeModal.show) {
-      this.$refs.createRecipeModal.show();
+        this.$refs.createRecipeModal.show();
       } else {
         console.error('Modal ref not found or show method not defined');
       }

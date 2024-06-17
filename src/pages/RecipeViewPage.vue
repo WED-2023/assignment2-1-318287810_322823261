@@ -18,10 +18,7 @@
           <div class="wrapped">
             Ingredients:
             <ul>
-              <li
-                v-for="(r, index) in recipe.extendedIngredients"
-                :key="index + '_' + r.id"
-              >
+              <li v-for="(r, index) in recipe.extendedIngredients" :key="index + '_' + r.id">
                 {{ r.original }}
               </li>
             </ul>
@@ -36,17 +33,17 @@
           </div>
         </div>
       </div>
-      <!-- <pre>
-      {{ $route.params }}
-      {{ recipe }}
-    </pre
-      > -->
+    </div>
+    <div v-else>
+      <p>Recipe not found.</p>
+      <router-link to="/">Go back to home page</router-link>
     </div>
   </div>
 </template>
 
 <script>
 import { mockGetRecipeFullDetails } from "../services/recipes.js";
+
 export default {
   data() {
     return {
@@ -55,66 +52,19 @@ export default {
   },
   async created() {
     try {
-      let response;
-      // response = this.$route.params.response;
-
-      try {
-        // response = await this.axios.get(
-        //   this.$root.store.server_domain + "/recipes/" + this.$route.params.recipeId,
-        //   {
-        //     withCredentials: true
-        //   }
-        // );
-
-        response = mockGetRecipeFullDetails(this.$route.params.id);
-
-        // console.log("response.status", response.status);
-        if (response.status !== 200) this.$router.replace("/NotFound");
-      } catch (error) {
-        console.log("error.response.status", error.response.status);
-        this.$router.replace("/NotFound");
-        return;
+      console.log("Fetching recipe details for ID:", this.$route.params.id);
+      const response = await mockGetRecipeFullDetails(parseInt(this.$route.params.id));
+      console.log("Response from mockGetRecipeFullDetails:", response);
+      if (!response.data || !response.data.recipe) {
+        this.recipe = null;
+      } else {
+        this.recipe = response.data.recipe;
+        // Update viewed status
+        localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
       }
-
-      let {
-        analyzedInstructions,
-        instructions,
-        extendedIngredients,
-        aggregateLikes,
-        readyInMinutes,
-        image,
-        title,
-        servings,
-        vegan,
-        vegetarian,
-        glutenFree
-      } = response.data.recipe;
-
-      let _instructions = analyzedInstructions
-        .map((fstep) => {
-          fstep.steps[0].step = fstep.name + fstep.steps[0].step;
-          return fstep.steps;
-        })
-        .reduce((a, b) => [...a, ...b], []);
-
-      let _recipe = {
-        instructions,
-        _instructions,
-        analyzedInstructions,
-        extendedIngredients,
-        aggregateLikes,
-        readyInMinutes,
-        image,
-        title,
-        servings,
-        vegan,
-        vegetarian,
-        glutenFree
-      };
-
-      this.recipe = _recipe;
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching recipe details:", error);
+      this.recipe = null;
     }
   }
 };
@@ -154,7 +104,4 @@ export default {
   margin-right: auto;
   width: 50%;
 }
-/* .recipe-header{
-
-} */
 </style>

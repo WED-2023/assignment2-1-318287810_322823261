@@ -2,94 +2,48 @@ import Vue from "vue";
 import App from "./App.vue";
 import VueAxios from "vue-axios";
 import axios from "axios";
-
-
 import './scss/form-style.scss';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
-
-
 import routes from "./routes";
 import VueRouter from "vue-router";
-Vue.use(VueRouter);
+import Vuelidate from "vuelidate";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faClock, faHeart, faLeaf, faCarrot, faBreadSlice, faThumbsUp, faEye } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+library.add(faClock, faHeart, faLeaf, faCarrot, faBreadSlice, faThumbsUp, faEye);
+
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
 const router = new VueRouter({
   routes,
 });
 
-import Vuelidate from "vuelidate";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
-
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
-
-import {
-  FormGroupPlugin,
-  FormPlugin,
-  FormInputPlugin,
-  ButtonPlugin,
-  CardPlugin,
-  NavbarPlugin,
-  FormSelectPlugin,
-  AlertPlugin,
-  ToastPlugin,
-  LayoutPlugin,
-} from "bootstrap-vue";
-
-[
-  FormGroupPlugin,
-  FormPlugin,
-  FormInputPlugin,
-  ButtonPlugin,
-  CardPlugin,
-  NavbarPlugin,
-  FormSelectPlugin,
-  AlertPlugin,
-  ToastPlugin,
-  LayoutPlugin,
-].forEach((x) => Vue.use(x));
-Vue.use(BootstrapVue)
+Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(Vuelidate);
-Vue.prototype.$axios = axios
-Vue.config.productionTip = false
-
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faClock, faHeart, faLeaf, faCarrot, faBreadSlice, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
-library.add(faClock, faHeart, faLeaf, faCarrot, faBreadSlice, faThumbsUp);
-
-Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 axios.interceptors.request.use(
   function(config) {
-    // Do something before request is sent
     return config;
   },
   function(error) {
-    // Do something with request error
     return Promise.reject(error);
   }
 );
 
-// Add a response interceptor
 axios.interceptors.response.use(
   function(response) {
-    // Do something with response data
     return response;
   },
   function(error) {
-    // Do something with response error
     return Promise.reject(error);
   }
 );
-
-Vue.use(VueAxios, axios);
-// const router = new VueRouter({
-//   routes,
-// });
-
-Vue.config.productionTip = false;
 
 const shared_data = {
   server_domain: "http://localhost:3000",
@@ -105,8 +59,6 @@ const shared_data = {
     this.username = undefined;
   },
 };
-console.log(shared_data);
-// Vue.prototype.$root.store = shared_data;
 
 Vue.mixin({
   data() {
@@ -127,6 +79,9 @@ Vue.mixin({
     },
   },
 });
+
+Vue.config.productionTip = false;
+
 new Vue({
   router,
   render: (h) => h(App),
