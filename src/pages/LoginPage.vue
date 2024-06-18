@@ -7,12 +7,13 @@
         label="Username:"
         label-for="username"
         label-cols-sm="3"
+        :state="validateState('username')"
       >
         <b-form-input
           id="username"
-          v-model="$v.form.username.$model"
+          v-model="form.username"
           type="text"
-          :state="validateState('username')"
+          required
         ></b-form-input>
         <b-form-invalid-feedback v-if="!$v.form.username.required">
           Username is required
@@ -24,12 +25,13 @@
         label="Password:"
         label-for="password"
         label-cols-sm="3"
+        :state="validateState('password')"
       >
         <b-form-input
           id="password"
           type="password"
-          v-model="$v.form.password.$model"
-          :state="validateState('password')"
+          v-model="form.password"
+          required
         ></b-form-input>
         <b-form-invalid-feedback v-if="!$v.form.password.required">
           Password is required
@@ -91,28 +93,27 @@ export default {
       const { $dirty, $error } = this.$v.form[param];
       return $dirty ? !$error : null;
     },
-    async Login() {
-      try {
-        const success = true; // modify this to test the error handling
-        const response = mockLogin({ username: this.form.username, password: this.form.password }, success);
-
-        if (response.status === 200) {
-          this.$root.store.login(this.form.username);
-          this.$router.push("/");
-        } else {
-          this.form.submitError = response.response.data.message;
-        }
-      } catch (err) {
-        this.form.submitError = err.response.data.message;
-      }
-    },
-    onLogin() {
+    async onLogin() {
       this.form.submitError = undefined;
       this.$v.form.$touch();
       if (this.$v.form.$anyError) {
         return;
       }
-      this.Login();
+
+      try {
+        const response = await mockLogin(this.form); // Pass the entire form object
+
+        if (response.status === 200) {
+          // Assuming mockLogin returns { status: 200, data: { username: 'username' } }
+          this.$root.store.username = response.data.username;
+          localStorage.setItem("loggedInUser", response.data.username);
+          this.$router.push("/");
+        } else {
+          this.form.submitError = response.data.message; // Assuming response.data.message contains error message
+        }
+      } catch (error) {
+        this.form.submitError = error.message;
+      }
     }
   }
 };
