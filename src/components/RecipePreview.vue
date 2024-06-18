@@ -5,7 +5,7 @@
         <img v-if="image_load" :src="recipe.image" class="recipe-image" />
       </div>
       <div class="recipe-footer">
-        <div :title="recipe.title" class="recipe-title">{{ recipe.title }}</div>
+        <div :class="{ 'recipe-title': true, 'viewed': hasViewed }" :title="recipe.title">{{ recipe.title }}</div>
         <ul class="recipe-overview">
           <li><font-awesome-icon icon="clock" /> {{ recipe.readyInMinutes }} minutes</li>
           <li><font-awesome-icon icon="thumbs-up" /> {{ recipe.aggregateLikes }}</li>
@@ -19,7 +19,6 @@
       <button @click="toggleFavorite" :class="{ 'favorite': isFavorite }">
         <font-awesome-icon icon="heart" /> {{ isFavorite ? 'Unfavorite' : 'Favorite' }}
       </button>
-      <p v-if="hasViewed"><font-awesome-icon icon="eye" /> Viewed</p>
     </div>
   </div>
 </template>
@@ -115,7 +114,7 @@ export default {
   height: 50%;
   overflow: hidden;
 }
-.recipe-footer .recipe-title {
+.recipe-title {
   padding: 10px 10px;
   width: 100%;
   font-size: 12pt;
@@ -142,5 +141,9 @@ export default {
 }
 .favorite {
   color: red;
+}
+.viewed {
+  color: blue;
+  font-style: italic;
 }
 </style>
