@@ -1,26 +1,14 @@
-import recipe_full_view from "../assets/mocks/recipe_full_view.json";
-import recipe_preview from "../assets/mocks/recipe_preview.json";
+import recipe1 from "../assets/mocks/recipe_full_view.json";
+import recipe2 from "../assets/mocks/recipe_full_view_2.json";
+import recipe3 from "../assets/mocks/recipe_full_view_3.json";
+
+const recipes = [recipe1, recipe2, recipe3];
 
 export function mockGetRecipesPreview(amount = 3) {
-  let recipes = [];
-  for(let i = 0; i < amount; i++){
-    recipes.push({
-      ...recipe_preview,
-      id: i + 1, // ensure unique ID for each recipe
-      vegan: i % 2 === 0,
-      vegetarian: i % 2 !== 0,
-      glutenFree: i % 3 === 0
-    });
-  }
-
-  return { data: { recipes: recipes } };
+  return { data: { recipes: recipes.slice(0, amount) } };
 }
 
 export function mockGetRecipeFullDetails(recipeId) {
-  // simulate finding the recipe by ID
-  if (recipeId === 1) {
-    return { data: { recipe: recipe_full_view } };
-  } else {
-    return { data: { recipe: null } };
-  }
+  const recipe = recipes.find(r => r.id === recipeId);
+  return { data: { recipe: recipe || null } };
 }
