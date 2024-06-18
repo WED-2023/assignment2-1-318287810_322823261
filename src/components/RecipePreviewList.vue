@@ -2,7 +2,12 @@
   <div class="recipe-preview-list">
     <h2>{{ title }}</h2>
     <div v-if="recipes.length">
-      <RecipePreview v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
+      <RecipePreview
+        v-for="recipe in recipes"
+        :key="recipe.id"
+        :recipe="recipe"
+        :has-viewed="hasViewed(recipe.id)"
+      />
     </div>
     <p v-else>No recipes found.</p>
   </div>
@@ -32,18 +37,27 @@ export default {
     };
   },
   async mounted() {
-    if (this.recipeIds.length) {
-      for (let recipeId of this.recipeIds) {
-        const response = mockGetRecipeFullDetails(recipeId);
-        if (response.data && response.data.recipe) {
-          this.recipes.push(response.data.recipe);
+    await this.loadRecipes();
+  },
+  methods: {
+    async loadRecipes() {
+      if (this.recipeIds.length) {
+        for (let recipeId of this.recipeIds) {
+          const response = mockGetRecipeFullDetails(recipeId);
+          if (response.data && response.data.recipe) {
+            this.recipes.push(response.data.recipe);
+          }
+        }
+      } else {
+        const response = await mockGetRecipesPreview(3);
+        if (response.data && response.data.recipes) {
+          this.recipes = response.data.recipes;
         }
       }
-    } else {
-      const response = await mockGetRecipesPreview(3);
-      if (response.data && response.data.recipes) {
-        this.recipes = response.data.recipes;
-      }
+    },
+    hasViewed(recipeId) {
+      let viewedRecipes = JSON.parse(localStorage.getItem('viewedRecipes')) || [];
+      return viewedRecipes.includes(recipeId);
     }
   }
 };
