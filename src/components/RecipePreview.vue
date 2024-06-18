@@ -1,6 +1,6 @@
 <template>
   <div class="recipe-preview">
-    <router-link :to="{ name: 'recipe', params: { id: recipe.id } }" class="recipe-link">
+    <router-link :to="{ name: 'recipe', params: { id: recipe.id } }" class="recipe-link" @click.native="markAsViewed">
       <div class="recipe-body">
         <img v-if="image_load" :src="recipe.image" class="recipe-image" />
       </div>
@@ -60,6 +60,17 @@ export default {
     toggleFavorite() {
       this.isFavorite = !this.isFavorite;
       localStorage.setItem(`favorite_${this.recipe.id}`, this.isFavorite);
+    },
+    markAsViewed() {
+      localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
+      this.hasViewed = true;
+
+      // הוספה לרשימת מתכונים שנצפו לאחרונה
+      let viewedRecipes = JSON.parse(localStorage.getItem('viewedRecipes')) || [];
+      if (!viewedRecipes.includes(this.recipe.id)) {
+        viewedRecipes.push(this.recipe.id);
+        localStorage.setItem('viewedRecipes', JSON.stringify(viewedRecipes));
+      }
     }
   }
 };

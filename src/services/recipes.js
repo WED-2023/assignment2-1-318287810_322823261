@@ -1,7 +1,7 @@
 import recipe_full_view from "../assets/mocks/recipe_full_view.json";
 import recipe_preview from "../assets/mocks/recipe_preview.json";
 
-export function mockGetRecipesPreview(amount = 1) {
+export function mockGetRecipesPreview(amount = 3) {
   let recipes = [];
   for(let i = 0; i < amount; i++){
     recipes.push({

@@ -1,0 +1,199 @@
+{
+    "id": 716431,
+    "image": "https://img.spoonacular.com/recipes/716431-556x370.jpg",
+    "title": "Grilled Chicken with Vegetables",
+    "readyInMinutes": 45,
+    "aggregateLikes": 220,
+    "vegetarian": false,
+    "vegan": false,
+    "glutenFree": true,
+    "summary": "Grilled chicken with vegetables is a healthy and delicious meal that's perfect for any occasion. It's easy to prepare and full of flavor. This recipe is gluten-free and packed with protein and nutrients.",
+    "extendedIngredients": [
+        {
+            "id": 5006,
+            "aisle": "Meat",
+            "image": "chicken-breast.jpg",
+            "consistency": "SOLID",
+            "name": "chicken breast",
+            "nameClean": "chicken breast",
+            "original": "2 chicken breasts",
+            "originalName": "chicken breasts",
+            "amount": 2.0,
+            "unit": "",
+            "meta": [],
+            "measures": {
+                "us": {
+                    "amount": 2.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                },
+                "metric": {
+                    "amount": 2.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                }
+            }
+        },
+        {
+            "id": 1102047,
+            "aisle": "Spices and Seasonings",
+            "image": "salt-and-pepper.jpg",
+            "consistency": "SOLID",
+            "name": "salt and pepper",
+            "nameClean": "salt and pepper",
+            "original": "salt and pepper to taste",
+            "originalName": "salt and pepper to taste",
+            "amount": 2.0,
+            "unit": "servings",
+            "meta": [
+                "to taste"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 2.0,
+                    "unitShort": "servings",
+                    "unitLong": "servings"
+                },
+                "metric": {
+                    "amount": 2.0,
+                    "unitShort": "servings",
+                    "unitLong": "servings"
+                }
+            }
+        },
+        {
+            "id": 10011282,
+            "aisle": "Produce",
+            "image": "bell-pepper-orange.png",
+            "consistency": "SOLID",
+            "name": "bell pepper",
+            "nameClean": "bell pepper",
+            "original": "1 bell pepper, sliced",
+            "originalName": "bell pepper, sliced",
+            "amount": 1.0,
+            "unit": "",
+            "meta": [
+                "sliced"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 1.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                },
+                "metric": {
+                    "amount": 1.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                }
+            }
+        },
+        {
+            "id": 1002030,
+            "aisle": "Spices and Seasonings",
+            "image": "black-pepper.png",
+            "consistency": "SOLID",
+            "name": "black pepper",
+            "nameClean": "black pepper",
+            "original": "1 tsp black pepper",
+            "originalName": "black pepper",
+            "amount": 1.0,
+            "unit": "tsp",
+            "meta": [],
+            "measures": {
+                "us": {
+                    "amount": 1.0,
+                    "unitShort": "tsp",
+                    "unitLong": "teaspoon"
+                },
+                "metric": {
+                    "amount": 1.0,
+                    "unitShort": "tsp",
+                    "unitLong": "teaspoon"
+                }
+            }
+        },
+        {
+            "id": 11215,
+            "aisle": "Produce",
+            "image": "garlic.png",
+            "consistency": "SOLID",
+            "name": "garlic",
+            "nameClean": "garlic",
+            "original": "2 cloves garlic, minced",
+            "originalName": "garlic, minced",
+            "amount": 2.0,
+            "unit": "cloves",
+            "meta": [
+                "minced"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 2.0,
+                    "unitShort": "cloves",
+                    "unitLong": "cloves"
+                },
+                "metric": {
+                    "amount": 2.0,
+                    "unitShort": "cloves",
+                    "unitLong": "cloves"
+                }
+            }
+        },
+        {
+            "id": 11477,
+            "aisle": "Produce",
+            "image": "zucchini.jpg",
+            "consistency": "SOLID",
+            "name": "zucchini",
+            "nameClean": "zucchini",
+            "original": "1 zucchini, sliced",
+            "originalName": "zucchini, sliced",
+            "amount": 1.0,
+            "unit": "",
+            "meta": [
+                "sliced"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 1.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                },
+                "metric": {
+                    "amount": 1.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                }
+            }
+        },
+        {
+            "id": 11507,
+            "aisle": "Produce",
+            "image": "carrot.png",
+            "consistency": "SOLID",
+            "name": "carrot",
+            "nameClean": "carrot",
+            "original": "2 carrots, chopped",
+            "originalName": "carrots, chopped",
+            "amount": 2.0,
+            "unit": "",
+            "meta": [
+                "chopped"
+            ],
+            "measures": {
+                "us": {
+                    "amount": 2.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                },
+                "metric": {
+                    "amount": 2.0,
+                    "unitShort": "",
+                    "unitLong": ""
+                }
+            }
+        }
+    ],
+    "servings": 2
+}

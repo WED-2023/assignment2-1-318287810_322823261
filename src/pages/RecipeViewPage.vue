@@ -18,16 +18,16 @@
           <div class="wrapped">
             Ingredients:
             <ul>
-              <li v-for="(r, index) in recipe.extendedIngredients" :key="index + '_' + r.id">
-                {{ r.original }}
+              <li v-for="(ingredient, index) in recipe.extendedIngredients" :key="index + '_' + ingredient.id">
+                {{ ingredient.original }}
               </li>
             </ul>
           </div>
           <div class="wrapped">
             Instructions:
             <ol>
-              <li v-for="s in recipe._instructions" :key="s.number">
-                {{ s.step }}
+              <li v-for="(instruction, index) in recipe.analyzedInstructions[0]?.steps || []" :key="index">
+                {{ instruction.step }}
               </li>
             </ol>
           </div>
@@ -52,15 +52,14 @@ export default {
   },
   async created() {
     try {
-      console.log("Fetching recipe details for ID:", this.$route.params.id);
-      const response = await mockGetRecipeFullDetails(parseInt(this.$route.params.id));
-      console.log("Response from mockGetRecipeFullDetails:", response);
-      if (!response.data || !response.data.recipe) {
-        this.recipe = null;
-      } else {
+      const recipeId = parseInt(this.$route.params.id);
+      const response = await mockGetRecipeFullDetails(recipeId);
+      if (response.data && response.data.recipe) {
         this.recipe = response.data.recipe;
         // Update viewed status
         localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
+      } else {
+        this.recipe = null;
       }
     } catch (error) {
       console.error("Error fetching recipe details:", error);

@@ -8,12 +8,12 @@
     {{ !$root.store.username }}
     <RecipePreviewList
       title="Last Viewed Recipes"
+      :recipeIds="viewedRecipeIds"
       :class="{
         RandomRecipes: true,
         blur: !$root.store.username,
         center: true
       }"
-      disabled
     ></RecipePreviewList>
     <!-- <div
       style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"
@@ -31,6 +31,15 @@ export default {
   components: {
     RecipePreviewList,
     CreateRecipeModal, // הוספת המודאל לרשימת הקומפוננטים המיובאים
+  },
+  data() {
+    return {
+      viewedRecipeIds: []
+    };
+  },
+  created() {
+    const viewedRecipes = JSON.parse(localStorage.getItem('viewedRecipes')) || [];
+    this.viewedRecipeIds = viewedRecipes;
   },
   methods: {
     showModal() {
