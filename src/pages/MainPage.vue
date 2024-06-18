@@ -1,40 +1,100 @@
 <template>
   <div class="container">
     <h1 class="title">Main Page</h1>
-    <RecipePreviewList title="Random Recipes" class="RandomRecipes center" />
-    <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to view this</router-link>
+    
+    <!-- Left Column - Random Recipes -->
+    <div class="left-column">
+      <h2>Explore This Recipe</h2>
+      <RecipePreviewList title="Random Recipes" class="RandomRecipes center" />
+      <b-button @click="fetchRandomRecipes" variant="primary">Load New Random Recipes</b-button>
+    </div>
+    
+    <!-- Right Column - Last Viewed Recipes or Login for Unregistered Users -->
+    <div class="right-column">
+      <h2 v-if="$root.store.username">Last Viewed Recipes</h2>
+      <RecipePreviewList
+        v-if="$root.store.username"
+        title="Last Viewed Recipes"
+        :recipeIds="viewedRecipeIds"
+        :class="{ RandomRecipes: true, blur: !$root.store.username, center: true }"
+      ></RecipePreviewList>
+      
+      <!-- Login Section for Unregistered Users -->
+      <div v-else>
+        <h2>Login to View More</h2>
+        <form @submit.prevent="login">
+          <b-form-group
+            id="input-group-username"
+            label="Username:"
+            label-for="username"
+            label-cols-sm="3"
+          >
+            <b-form-input
+              id="username"
+              v-model="loginData.username"
+              type="text"
+              required
+            ></b-form-input>
+          </b-form-group>
+          
+          <b-form-group
+            id="input-group-password"
+            label="Password:"
+            label-for="password"
+            label-cols-sm="3"
+          >
+            <b-form-input
+              id="password"
+              v-model="loginData.password"
+              type="password"
+              required
+            ></b-form-input>
+          </b-form-group>
+          
+          <b-button type="submit" variant="primary">Login</b-button>
+        </form>
+        <div class="mt-2">
+          Do not have an account yet?
+          <router-link to="register">Register here</router-link>
+        </div>
+        <b-alert
+          class="mt-2"
+          v-if="form.submitError"
+          variant="warning"
+          dismissible
+          show
+        >
+          Login failed: {{ form.submitError }}
+        </b-alert>
+      </div>
+    </div>
+    
+    <!-- Create Recipe Modal Trigger -->
     <b-button @click="showModal" variant="primary">Create Recipe</b-button>
     <CreateRecipeModal ref="createRecipeModal" />
-    {{ !$root.store.username }}
-    <RecipePreviewList
-      title="Last Viewed Recipes"
-      :recipeIds="viewedRecipeIds"
-      :class="{
-        RandomRecipes: true,
-        blur: !$root.store.username,
-        center: true
-      }"
-    ></RecipePreviewList>
-    <!-- <div
-      style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"
-    >
-      Centeredasdasdad
-    </div>-->
   </div>
 </template>
 
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
-import CreateRecipeModal from "@/pages/CreateRecipeModal.vue"; // \src\pages\CreateRecipeModal.vue
+import CreateRecipeModal from "@/pages/CreateRecipeModal.vue";
+import { mockLogin } from "../services/auth.js";
 
 export default {
   components: {
     RecipePreviewList,
-    CreateRecipeModal, // הוספת המודאל לרשימת הקומפוננטים המיובאים
+    CreateRecipeModal,
   },
   data() {
     return {
-      viewedRecipeIds: []
+      viewedRecipeIds: [],
+      loginData: {
+        username: '',
+        password: ''
+      },
+      form: {
+        submitError: undefined
+      }
     };
   },
   created() {
@@ -43,27 +103,76 @@ export default {
   },
   methods: {
     showModal() {
-      console.log('Opening modal'); // לוג לפתיחת המודאל
       if (this.$refs.createRecipeModal && this.$refs.createRecipeModal.show) {
         this.$refs.createRecipeModal.show();
       } else {
         console.error('Modal ref not found or show method not defined');
       }
     },
-  },
+    fetchRandomRecipes() {
+      // Implement logic to fetch new random recipes
+      console.log('Fetching new random recipes...');
+    },
+    async login() {
+      try {
+        const response = await mockLogin(this.loginData);
+        if (response.status === 200) {
+          this.$root.store.username = response.data.username; // Assuming response has username
+          localStorage.setItem('loggedInUser', response.data.username);
+          this.$router.push('/');
+        } else {
+          this.form.submitError = response.data.message;
+        }
+      } catch (error) {
+        this.form.submitError = error.message;
+      }
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.left-column, .right-column {
+  width: 45%; /* Adjust column widths as needed */
+}
+.left-column {
+  margin-right: 20px; /* Add margin between columns */
+}
 .RandomRecipes {
-  margin: 10px 0 10px;
+  margin-bottom: 20px;
 }
 .blur {
-  -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
+  -webkit-filter: blur(5px);
   filter: blur(2px);
 }
-::v-deep .blur .recipe-preview {
-  pointer-events: none;
-  cursor: default;
+
+.center {
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+form label {
+  margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="password"],
+form button {
+  margin-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 15px;
 }
 </style>
