@@ -84,5 +84,8 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  data: {
+    isLoggedIn: true
+  },
   render: (h) => h(App),
 }).$mount("#app");
