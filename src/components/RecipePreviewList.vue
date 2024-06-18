@@ -2,12 +2,14 @@
   <div class="recipe-preview-list">
     <h2>{{ title }}</h2>
     <div v-if="recipes.length">
-      <RecipePreview
-        v-for="recipe in recipes"
-        :key="recipe.id"
-        :recipe="recipe"
-        :has-viewed="hasViewed(recipe.id)"
-      />
+      <router-link v-for="recipe in recipes" :key="recipe.id" :to="{ name: 'recipe-details', params: { id: recipe.id } }">
+        <RecipePreview
+          v-for="recipe in recipes"
+          :key="recipe.id"
+          :recipe="recipe"
+          :has-viewed="hasViewed(recipe.id)"
+        />
+      </router-link>
     </div>
     <p v-else>No recipes found.</p>
   </div>
