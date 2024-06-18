@@ -1,15 +1,23 @@
 // src/services/auth.js
 
 
-  export function mockLogin(credentials, success = true) {
-    // Check if already logged in
-    if (!success) {
-      throw { status: 409, response: { data: { message: "A user is already logged in", success: false } } };
-    }
+export async function mockLogin(credentials, success = true) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (!success) {
+        reject({ status: 401, response: { data: { message: "Invalid credentials", success: false } } });
+      } else {
+        // Simulate successful login with a mock user
+        const mockUser = {
+          username: credentials.username,
+          // add more user details as needed
+        };
+        resolve({ status: 200, data: mockUser });
+      }
+    }, 1000); // Simulate a 1-second delay
+  });
+}
 
-    // If all checks pass, return a success message
-    return { status: 200, response: { data: { message: "login succeeded", success: true}} };
-  }
   
 
   export function mockRegister(userDetails, success = true) {
