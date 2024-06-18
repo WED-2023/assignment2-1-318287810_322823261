@@ -4,13 +4,12 @@
     <div class="search-controls">
       <input 
         v-model="searchQuery" 
-        @input="searchRecipes" 
         type="text" 
         placeholder="Search for recipes..."
       />
       <div>
         <label for="numberOfRecipes">Number of recipes:</label>
-        <select v-model="numberOfRecipes" @change="searchRecipes">
+        <select v-model="numberOfRecipes">
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="15">15</option>
@@ -18,11 +17,12 @@
       </div>
       <div>
         <label for="selectedCuisine">Cuisine:</label>
-        <select v-model="selectedCuisine" @change="searchRecipes">
+        <select v-model="selectedCuisine">
           <option value="">No Filter</option>
           <option v-for="cuisine in cuisines" :key="cuisine" :value="cuisine">{{ cuisine }}</option>
         </select>
       </div>
+      <button @click="searchRecipes">Search</button>
     </div>
     <div class="search-results">
       <div v-if="searchResults.length === 0">No results found</div>
@@ -50,7 +50,7 @@ export default {
       searchQuery: '',
       numberOfRecipes: 5,
       selectedCuisine: '',
-      cuisines: ['Italian', 'Mexican', 'Chinese', 'Indian', 'American'], // Mocked list of cuisines
+      cuisines: ['Italian', 'Mexican', 'Chinese', 'Indian', 'American'], // רשימת סוגי מטבחים מדומים
       searchResults: []
     };
   },
@@ -64,19 +64,50 @@ export default {
     }
   },
   watch: {
-    searchQuery: 'searchRecipes',
-    numberOfRecipes: 'searchRecipes',
-    selectedCuisine: 'searchRecipes'
+    searchQuery() {
+      this.saveLastSearch();
+    },
+    numberOfRecipes() {
+      this.saveLastSearch();
+    },
+    selectedCuisine() {
+      this.saveLastSearch();
+    }
   },
   created() {
     const lastSearchQuery = localStorage.getItem('lastSearchQuery');
+    const lastNumberOfRecipes = localStorage.getItem('lastNumberOfRecipes');
+    const lastSelectedCuisine = localStorage.getItem('lastSelectedCuisine');
+
     if (lastSearchQuery) {
       this.searchQuery = lastSearchQuery;
+    }
+
+    if (lastNumberOfRecipes) {
+      this.numberOfRecipes = Number(lastNumberOfRecipes);
+    }
+
+    if (lastSelectedCuisine) {
+      this.selectedCuisine = lastSelectedCuisine;
+    }
+
+    if (lastSearchQuery || lastNumberOfRecipes || lastSelectedCuisine) {
       this.searchRecipes();
     }
   },
-  beforeDestroy() {
-    localStorage.setItem('lastSearchQuery', this.searchQuery);
+  methods: {
+    searchRecipes() {
+      const response = mockSearchRecipes(this.searchQuery, this.numberOfRecipes, this.selectedCuisine);
+      this.searchResults = response.data.recipes;
+    },
+    showRecipeDetails(recipeId) {
+      this.$router.push({ name: 'recipe', params: { id: recipeId } });
+    },
+    saveLastSearch() {
+      localStorage.setItem('lastSearchQuery', this.searchQuery);
+      localStorage.setItem('lastNumberOfRecipes', this.numberOfRecipes);
+      localStorage.setItem('lastSelectedCuisine', this.selectedCuisine);
+    }
   }
 };
 </script>
@@ -90,13 +121,12 @@ export default {
 
 .search-controls {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
 .search-controls input {
-  flex: 1;
-  margin-right: 10px;
   padding: 5px;
 }
 

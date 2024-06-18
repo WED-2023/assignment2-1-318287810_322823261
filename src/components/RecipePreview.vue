@@ -53,12 +53,19 @@ export default {
     this.hasViewed = localStorage.getItem(`viewed_${this.recipe.id}`) === 'true';
 
     // בדיקה אם המתכון במועדפים
-    this.isFavorite = localStorage.getItem(`favorite_${this.recipe.id}`) === 'true';
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+    this.isFavorite = favoriteRecipes.includes(this.recipe.id);
   },
   methods: {
     toggleFavorite() {
+      let favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+      if (this.isFavorite) {
+        favoriteRecipes = favoriteRecipes.filter(id => id !== this.recipe.id);
+      } else {
+        favoriteRecipes.push(this.recipe.id);
+      }
+      localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
       this.isFavorite = !this.isFavorite;
-      localStorage.setItem(`favorite_${this.recipe.id}`, this.isFavorite);
     },
     markAsViewed() {
       localStorage.setItem(`viewed_${this.recipe.id}`, 'true');

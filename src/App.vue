@@ -21,7 +21,6 @@
             <b-dropdown-item :to="{ name: 'my-recipes' }">My Recipes</b-dropdown-item>
             <b-dropdown-item :to="{ name: 'family-recipes' }">Family Recipes</b-dropdown-item>
           </b-nav-item-dropdown>
-          <b-nav-item v-if="$root.store.username" :to="{ name: 'create-recipe' }">Create Recipe</b-nav-item>
           <b-button v-if="$root.store.username" @click="logout" variant="outline-light">Logout</b-button>
         </b-navbar-nav>
       </b-collapse>

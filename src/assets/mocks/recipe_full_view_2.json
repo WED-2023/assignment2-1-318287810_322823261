@@ -7,6 +7,7 @@
     "vegetarian": true,
     "vegan": false,
     "glutenFree": false,
+    "cuisine": "Italian",
     "summary": "This pasta with tomato and basil is a quick and easy recipe that's perfect for a weeknight dinner. It takes only 30 minutes to prepare and is packed with flavor. The fresh tomatoes and basil make it light and refreshing.",
     "extendedIngredients": [
         {

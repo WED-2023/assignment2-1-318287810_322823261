@@ -7,6 +7,7 @@
     "vegetarian": false,
     "vegan": false,
     "glutenFree": true,
+    "cuisine": "Mexican",
     "summary": "Grilled chicken with vegetables is a healthy and delicious meal that's perfect for any occasion. It's easy to prepare and full of flavor. This recipe is gluten-free and packed with protein and nutrients.",
     "extendedIngredients": [
         {
