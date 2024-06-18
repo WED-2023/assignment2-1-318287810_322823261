@@ -5,19 +5,14 @@
     
     <h2>Our Team</h2>
     <div class="team-member">
+      <h3>Shilat Alon</h3>
+      <p>Student Developer</p>
+      <p>I am a third-year student in Information Systems Engineering at Ben-Gurion University. As part of the course "Internet Development Environments", we are creating a recipe website.</p>
+    </div>
+    <div class="team-member">
       <h3>John Doe</h3>
       <p>Project Manager</p>
       <p>John leads the team with a strong vision and exceptional project management skills, ensuring that all milestones are met on time.</p>
-    </div>
-    <div class="team-member">
-      <h3>Jane Smith</h3>
-      <p>Lead Developer</p>
-      <p>Jane is the brain behind the code. Her expertise in Vue.js and frontend development has been pivotal in building this amazing platform.</p>
-    </div>
-    <div class="team-member">
-      <h3>Mike Johnson</h3>
-      <p>UI/UX Designer</p>
-      <p>Mike ensures that our platform is not only functional but also visually appealing, providing a seamless user experience.</p>
     </div>
     
     <h2>Previous Exercises</h2>

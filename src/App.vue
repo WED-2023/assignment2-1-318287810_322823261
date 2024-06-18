@@ -7,7 +7,7 @@
         <b-navbar-nav>
           <b-nav-item :to="{ name: 'main' }">Home</b-nav-item>
           <b-nav-item :to="{ name: 'search' }">Search</b-nav-item>
-          <b-nav-item :to="{ name: 'AboutPage' }">About</b-nav-item>
+          <b-nav-item :to="{ name:'about' }" tag="router-link">About</b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
