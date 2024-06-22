@@ -1,7 +1,8 @@
 <template>
-  <div class="my-recipes-page">
-    <h1>My Recipes</h1>
-    <RecipePreviewList title="My Recipes" :recipeIds="myRecipeIds" class="center" />
+  <div class="my-recipes-page container">
+    <div class="recipes-container">
+      <RecipePreviewList title="My Recipes" :recipeIds="myRecipeIds" class="center" />
+    </div>
   </div>
 </template>
 
@@ -35,7 +36,22 @@ export default {
 .my-recipes-page {
   padding: 20px;
 }
-.center {
+
+.title {
+  font-size: 2em;
+  color: #9a5f9a; /* צבע הכותרת לסגול */
   text-align: center;
+}
+
+.recipes-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.recipe-preview-list {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 }
 </style>

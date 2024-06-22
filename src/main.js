@@ -10,10 +10,11 @@ import Vuelidate from "vuelidate";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faClock, faHeart, faLeaf, faCarrot, faBreadSlice, faThumbsUp, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faHeart as fasHeart, faLeaf, faCarrot, faBreadSlice, faThumbsUp, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faClock, faHeart, faLeaf, faCarrot, faBreadSlice, faThumbsUp, faEye);
+library.add(faClock, fasHeart, farHeart ,faLeaf, faCarrot, faBreadSlice, faThumbsUp, faEye);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

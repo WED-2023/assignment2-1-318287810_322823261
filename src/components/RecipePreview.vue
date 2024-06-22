@@ -7,7 +7,7 @@
       <div class="recipe-footer">
         <div :class="{ 'recipe-title': true, 'viewed': hasViewed }" :title="recipe.title">{{ recipe.title }}</div>
         <ul class="recipe-overview">
-          <li><font-awesome-icon icon="clock" /> {{ recipe.readyInMinutes }} minutes</li>
+          <li><font-awesome-icon icon="clock" /> {{ recipe.readyInMinutes }} mins</li>
           <li><font-awesome-icon icon="thumbs-up" /> {{ recipe.aggregateLikes }}</li>
           <li v-if="recipe.vegan"><font-awesome-icon icon="leaf" /> vegan</li>
           <li v-else-if="recipe.vegetarian"><font-awesome-icon icon="carrot" /> vegetarian</li>
@@ -16,8 +16,8 @@
       </div>
     </router-link>
     <div class="actions">
-      <button @click="toggleFavorite" :class="{ 'favorite': isFavorite }">
-        <font-awesome-icon icon="heart" /> {{ isFavorite ? 'Unfavorite' : 'Favorite' }}
+      <button @click="toggleFavorite" :class="{ 'favorite': isFavorite, 'not-favorite': !isFavorite }">
+        <font-awesome-icon :icon="[isFavorite ? 'fas' : 'far', 'heart']" />
       </button>
     </div>
   </div>
@@ -90,6 +90,10 @@ export default {
   position: relative;
   margin: 10px 10px;
   color: inherit;
+  background-color: #ffffff; /* צבע רקע לבן */
+  border: 1px solid #ccc; /* מסגרת בצבע אפור בהיר */
+  /* border-radius: 5px; */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* הוספת צל */
 }
 .recipe-link {
   text-decoration: none;
@@ -137,14 +141,33 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0px;
+  list-style-type: none; /* הסרת הנקודות */
 }
 .recipe-footer ul.recipe-overview li {
   flex: 1;
   text-align: center;
+  font-size: 20px; /* הגדלת גודל הסמלים */
 }
 .actions {
   padding: 10px;
   text-align: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+button.favorite, button.not-favorite {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 32px; /* הגדלת גודל הסמל */
+  padding: 0;
+  color: inherit;
+}
+.not-favorite {
+  color: red;
+  border: 2px solid red; /* מסגרת אדומה ללב לא לחוץ */
+  border-radius: 50%;
+  padding: 5px;
 }
 .favorite {
   color: red;

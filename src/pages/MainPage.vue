@@ -1,11 +1,11 @@
 <template>
-  <div class="container">
+  <div class="container main-page">
     <h1 class="title">Main Page</h1>
     
     <!-- Left Column - Random Recipes -->
     <div class="left-column">
       <RecipePreviewList title="Random Recipes" class="RandomRecipes center" />
-      <b-button @click="fetchRandomRecipes" variant="primary">Load New Random Recipes</b-button>
+      <b-button @click="fetchRandomRecipes" variant="info">Load New Random Recipes</b-button>
     </div>
     
     <!-- Right Column - Last Viewed Recipes or Login for Unregistered Users -->
@@ -68,7 +68,7 @@
     </div>
     
     <!-- Create Recipe Modal Trigger -->
-    <b-button @click="showModal" variant="primary">Create Recipe</b-button>
+    <b-button @click="showModal" variant="dark">Create Recipe</b-button>
     <CreateRecipeModal ref="createRecipeModal" />
   </div>
 </template>
@@ -134,16 +134,33 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  background-color: #dbd4db; /* צבע רקע לסגול בהיר */
+  padding: 20px;
+  // border-radius: 10px; /* מסגרת עגולה */
 }
+
+.main-page {
+  padding: 20px;
+  border: 2px solid #fcfbfc; /* צבע המסגרת לסגול בהיר */
+}
+
+.title {
+  font-size: 2em;
+  color: #744a74; /* צבע הכותרת לסגול */
+}
+
 .left-column, .right-column {
-  width: 45%; /* Adjust column widths as needed */
+  width: 45%;
 }
+
 .left-column {
-  margin-right: 20px; /* Add margin between columns */
+  margin-right: 20px;
 }
+
 .RandomRecipes {
   margin-bottom: 20px;
 }
+
 .blur {
   -webkit-filter: blur(5px);
   filter: blur(2px);

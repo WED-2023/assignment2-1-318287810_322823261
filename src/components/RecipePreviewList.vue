@@ -2,14 +2,13 @@
   <div class="recipe-preview-list">
     <h2>{{ title }}</h2>
     <div v-if="recipes.length">
-      <router-link v-for="recipe in recipes" :key="recipe.id" :to="{ name: 'recipe-details', params: { id: recipe.id } }">
-        <RecipePreview
-          v-for="recipe in recipes"
-          :key="recipe.id"
-          :recipe="recipe"
-          :has-viewed="hasViewed(recipe.id)"
-        />
-      </router-link>
+      <RecipePreview
+        v-for="recipe in recipes"
+        :key="recipe.id"
+        :recipe="recipe"
+        :has-viewed="hasViewed(recipe.id)"
+        @toggle-favorite="toggleFavorite"
+      />
     </div>
     <p v-else>No recipes found.</p>
   </div>
@@ -60,6 +59,9 @@ export default {
     hasViewed(recipeId) {
       let viewedRecipes = JSON.parse(localStorage.getItem('viewedRecipes')) || [];
       return viewedRecipes.includes(recipeId);
+    },
+    toggleFavorite(recipeId) {
+      this.$emit('toggle-favorite', recipeId);
     }
   }
 };
