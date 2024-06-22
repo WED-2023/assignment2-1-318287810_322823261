@@ -4,7 +4,6 @@
     
     <!-- Left Column - Random Recipes -->
     <div class="left-column">
-      <h2>Explore This Recipe</h2>
       <RecipePreviewList title="Random Recipes" class="RandomRecipes center" />
       <b-button @click="fetchRandomRecipes" variant="primary">Load New Random Recipes</b-button>
     </div>
@@ -14,7 +13,6 @@
       <h2 v-if="$root.store.username">Last Viewed Recipes</h2>
       <RecipePreviewList
         v-if="$root.store.username"
-        title="Last Viewed Recipes"
         :recipeIds="viewedRecipeIds"
         :class="{ RandomRecipes: true, blur: !$root.store.username, center: true }"
       ></RecipePreviewList>

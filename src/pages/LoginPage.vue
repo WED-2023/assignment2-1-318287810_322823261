@@ -31,6 +31,7 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
+import { mapActions } from 'vuex';
 import { mockLogin } from "../services/auth.js";
 
 export default {
@@ -67,21 +68,28 @@ export default {
       }
 
       try {
-        const response = await mockLogin(this.form); // Pass the entire form object
+        const response = await mockLogin(this.form); // Assuming mockLogin handles login
 
         if (response.status === 200) {
-          // Assuming mockLogin returns { status: 200, data: { username: 'username' } }
-          this.$root.store.username = response.data.username;
-          localStorage.setItem("loggedInUser", response.data.username);
-          this.$router.push("/");
+          // Update Vuex store to indicate user is logged in
+          this.$store.commit('SET_LOGIN_STATUS', true);
+
+          // Check if there's a redirect path stored in localStorage
+          const redirectPath = localStorage.getItem('redirectPath');
+          if (redirectPath) {
+            localStorage.removeItem('redirectPath'); // Clear the redirect path
+            this.$router.push(redirectPath); // Redirect to the stored path
+          } else {
+            this.$router.push("/"); // Redirect to the main page
+          }
         } else {
-          this.form.submitError = response.data.message; // Assuming response.data.message contains error message
+          this.form.submitError = response.data.message; // Show login error message
         }
-      } catch (error) {
-        this.form.submitError = error.message;
+      }catch (error) {
+        this.form.submitError = "An error occurred during login.";
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
