@@ -30,7 +30,7 @@ export function toggleFavoriteRecipe(recipeId) {
 }
 
 
-export function mockSearchRecipes(query, numberOfRecipes, selectedCuisine, selectedDiet, selectedIntolerance) {
+export function mockSearchRecipes(query, numberOfRecipes, selectedCuisine, selectedDiet, selectedIntolerance, sortBy) {
   let results = recipes;
 
   // סינון לפי השם
@@ -57,6 +57,13 @@ export function mockSearchRecipes(query, numberOfRecipes, selectedCuisine, selec
     if (selectedIntolerance.toLowerCase() === 'gluten') {
       results = results.filter(recipe => recipe.glutenFree);
     }
+  }
+
+  // מיון
+  if (sortBy === 'time') {
+    results.sort((a, b) => a.readyInMinutes - b.readyInMinutes);
+  } else if (sortBy === 'popularity') {
+    results.sort((a, b) => b.aggregateLikes - a.aggregateLikes);
   }
 
   // החזרת כל התוצאות אם יש פחות ממספר המתכונים המבוקש

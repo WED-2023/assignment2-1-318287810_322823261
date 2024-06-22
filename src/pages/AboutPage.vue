@@ -1,5 +1,6 @@
 <template>
   <div class="about-page container">
+    <img src="@/assets/about.webp" alt="Logo" class="about-logo" />
     <h1>About Us</h1>
     <p>Welcome to our recipe website! We are dedicated to providing a comprehensive platform for food enthusiasts to explore, share, and enjoy a wide variety of recipes. Our team of passionate developers has worked tirelessly to create a user-friendly and engaging experience for all our users.</p>
     
@@ -35,6 +36,20 @@ export default {
 .about-page {
   font-family: Arial, sans-serif;
   color: #333;
+}
+
+.about-logo {
+  display: block;
+  margin: 0 auto 20px;
+  max-width: 40%;
+  height: auto;
+}
+
+h1 {
+  font-size: 4em;
+  font-weight: bold;
+  text-align: center;
+  color: #17a2b8; /* צבע ה-navbar */
 }
 
 .team-member {

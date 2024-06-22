@@ -36,6 +36,14 @@
           <option v-for="intolerance in intolerances" :key="intolerance" :value="intolerance">{{ intolerance }}</option>
         </select>
       </div>
+      <div>
+        <label for="sortBy">Sort by:</label>
+        <select v-model="sortBy">
+          <option value="">No Sort</option>
+          <option value="time">Preparation Time</option>
+          <option value="popularity">Popularity</option>
+        </select>
+      </div>
       <button @click="searchRecipes">Search</button>
     </div>
     <div class="search-results">
@@ -69,6 +77,7 @@ export default {
       selectedCuisine: '',
       selectedDiet: '',
       selectedIntolerance: '',
+      sortBy: '',
       cuisines,
       diets,
       intolerances,
@@ -77,7 +86,7 @@ export default {
   },
   methods: {
     searchRecipes() {
-      const response = mockSearchRecipes(this.searchQuery, this.numberOfRecipes, this.selectedCuisine, this.selectedDiet, this.selectedIntolerance);
+      const response = mockSearchRecipes(this.searchQuery, this.numberOfRecipes, this.selectedCuisine, this.selectedDiet, this.selectedIntolerance, this.sortBy);
       this.searchResults = response.data.recipes;
     },
     showRecipeDetails(recipeId) {
@@ -89,7 +98,8 @@ export default {
     numberOfRecipes: 'searchRecipes',
     selectedCuisine: 'searchRecipes',
     selectedDiet: 'searchRecipes',
-    selectedIntolerance: 'searchRecipes'
+    selectedIntolerance: 'searchRecipes',
+    sortBy: 'searchRecipes'
   },
   created() {
     const lastSearchQuery = localStorage.getItem('lastSearchQuery');

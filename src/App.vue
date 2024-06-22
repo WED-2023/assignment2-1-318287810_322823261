@@ -1,7 +1,10 @@
 <template>
   <div id="app">
-    <b-navbar toggleable="lg" type="dark" variant="info">
-      <b-navbar-brand href="#">Vue Recipes</b-navbar-brand>
+    <b-navbar toggleable="lg" type="dark" class="custom-navbar">
+      <b-navbar-brand :to="{ name: 'main' }">
+        <img src="@/assets/logo3.png" alt="Logo" class="logo" />
+        Vue Recipes
+      </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
@@ -68,6 +71,11 @@ export default {
   z-index: 1000; /* Make sure it is on top of other content */
 }
 
+.custom-navbar {
+  background-color: rgba(154, 95, 154, 0.79) !important; 
+  font-size: x-large;
+}
+
 #nav a {
   font-weight: bold;
   color: #2c3e50;
@@ -79,5 +87,10 @@ export default {
 
 main {
   padding-top: 60px; /* Allow space for the fixed navbar */
+}
+
+.logo {
+  height: 80px;
+  margin-right: 10px;
 }
 </style>
