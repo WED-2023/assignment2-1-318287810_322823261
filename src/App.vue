@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <b-navbar toggleable="lg" type="dark" class="custom-navbar">
-      <b-navbar-brand :to="{ name: 'main' }">
+      <b-navbar-brand :to="{ name: 'main' }" class="navbar-brand-custom">
         <img src="@/assets/logo3.png" alt="Logo" class="logo" />
-        Vue Recipes
+        <span class="brand-text">Vue Recipes</span>
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
@@ -42,6 +42,7 @@ export default {
     logout() {
       this.$root.store.logout();
       this.$root.toast("Logout", "User logged out successfully", "success");
+      localStorage.removeItem('lastSearchQuery'); // מחיקת החיפוש האחרון רק בעת ההתנתקות
       this.$router.push("/").catch(() => {
         this.$forceUpdate();
       });
@@ -92,5 +93,9 @@ main {
 .logo {
   height: 80px;
   margin-right: 10px;
+}
+
+.navbar-brand-custom .brand-text {
+  font-size: 2rem; /* Adjust the font size as needed */
 }
 </style>

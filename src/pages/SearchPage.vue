@@ -44,7 +44,6 @@
           <option value="popularity">Popularity</option>
         </select>
       </div>
-      <button @click="searchRecipes">Search</button>
     </div>
     <div class="search-results">
       <div v-if="searchResults.length === 0">No results found</div>
@@ -72,7 +71,7 @@ import intolerances from "../assets/mocks/intolerances.json";
 export default {
   data() {
     return {
-      searchQuery: '',
+      searchQuery: this.$root.store.lastSearchQuery || '',
       numberOfRecipes: 5,
       selectedCuisine: '',
       selectedDiet: '',
@@ -86,6 +85,11 @@ export default {
   },
   methods: {
     searchRecipes() {
+      if (this.$root.store.username) {
+        this.$root.store.lastSearchQuery = this.searchQuery;
+        localStorage.setItem('lastSearchQuery', this.searchQuery);
+      }
+
       const response = mockSearchRecipes(this.searchQuery, this.numberOfRecipes, this.selectedCuisine, this.selectedDiet, this.selectedIntolerance, this.sortBy);
       this.searchResults = response.data.recipes;
     },
@@ -102,15 +106,9 @@ export default {
     sortBy: 'searchRecipes'
   },
   created() {
-    const lastSearchQuery = localStorage.getItem('lastSearchQuery');
-    if (lastSearchQuery && this.$root.store.isLoggedIn) {
-      this.searchQuery = lastSearchQuery;
+    if (this.$root.store.username && this.$root.store.lastSearchQuery) {
+      this.searchQuery = this.$root.store.lastSearchQuery;
       this.searchRecipes();
-    }
-  },
-  beforeDestroy() {
-    if (this.$root.store.isLoggedIn) {
-      localStorage.setItem('lastSearchQuery', this.searchQuery);
     }
   }
 };
