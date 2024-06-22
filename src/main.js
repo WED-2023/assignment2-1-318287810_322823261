@@ -47,7 +47,8 @@ axios.interceptors.response.use(
 
 const shared_data = {
   server_domain: "http://localhost:3000",
-  username: localStorage.username,
+  username: localStorage.getItem("username"),
+  lastSearchQuery: localStorage.getItem("lastSearchQuery") || '',
   login(username) {
     localStorage.setItem("username", username);
     this.username = username;
@@ -56,7 +57,9 @@ const shared_data = {
   logout() {
     console.log("logout");
     localStorage.removeItem("username");
+    localStorage.removeItem("lastSearchQuery");
     this.username = undefined;
+    this.lastSearchQuery = '';
   },
 };
 
@@ -84,8 +87,6 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
-  data: {
-    isLoggedIn: true
-  },
+  data: shared_data,
   render: (h) => h(App),
 }).$mount("#app");
