@@ -11,24 +11,25 @@
       <p>I am a third-year student in Information Systems Engineering at Ben-Gurion University. As part of the course "Internet Development Environments", we are creating a recipe website.</p>
     </div>
     <div class="team-member">
-      <h3>John Doe</h3>
-      <p>Project Manager</p>
-      <p>John leads the team with a strong vision and exceptional project management skills, ensuring that all milestones are met on time.</p>
+      <h3>Razan Jbara</h3>
+      <p>Student Developer</p>
+      <p>A keen developer with a passion for learning new things.</p>
     </div>
     
     <h2>Previous Exercises</h2>
-    <ul>
-      <li><router-link :to="{ name: 'exercise1' }">Exercise 1</router-link></li>
-      <li><router-link :to="{ name: 'exercise2' }">Exercise 2</router-link></li>
-      <li><router-link :to="{ name: 'exercise3' }">Exercise 3</router-link></li>
-      <!-- Add more exercises as needed -->
-    </ul>
+    <ExerciseLinks />
+
   </div>
 </template>
 
 <script>
+import ExerciseLinks from '@/components/ExerciseLinks.vue'; // Adjust the path based on your project structure
+
 export default {
-  name: 'AboutPage'
+  name: 'AboutPage',
+  components: {
+    ExerciseLinks,
+  },
 };
 </script>
 
@@ -49,7 +50,7 @@ h1 {
   font-size: 4em;
   font-weight: bold;
   text-align: center;
-  color: #17a2b8; /* צבע ה-navbar */
+  color: #17a2b8; /* Navbar color */
 }
 
 .team-member {
