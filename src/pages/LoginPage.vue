@@ -113,8 +113,8 @@ export default {
 
 .title {
   text-align: center;
-  color: #007bff; /* Update to match the navbar color */
-  font-size: 2em;
+  color: #9168b3; /* Update to match the navbar color */
+  font-size: 4em;
   font-weight: bold;
 }
 

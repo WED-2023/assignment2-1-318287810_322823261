@@ -23,11 +23,11 @@
               </li>
             </ul>
           </div>
-          <div class="wrapped">
+          <div v-if="recipeInstructions.length > 0" class="wrapped">
             Instructions:
             <ol>
-              <li v-for="(instruction, index) in recipeInstructions" :key="index">
-                {{ instruction.step }}
+              <li v-for="(step, index) in recipeInstructions" :key="index">
+                {{ step.step }}
               </li>
             </ol>
           </div>
@@ -40,6 +40,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { mockGetRecipeFullDetails } from "../services/recipes.js";
 
@@ -75,6 +76,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
 .container {
   max-width: 800px;

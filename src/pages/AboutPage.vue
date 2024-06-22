@@ -50,7 +50,7 @@ h1 {
   font-size: 4em;
   font-weight: bold;
   text-align: center;
-  color: #17a2b8; /* Navbar color */
+  color: #9f71ad; /* Navbar color */
 }
 
 .team-member {
