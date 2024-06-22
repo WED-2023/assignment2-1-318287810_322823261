@@ -26,7 +26,7 @@
           <div class="wrapped">
             Instructions:
             <ol>
-              <li v-for="(instruction, index) in recipe.analyzedInstructions[0]?.steps || []" :key="index">
+              <li v-for="(instruction, index) in recipeInstructions" :key="index">
                 {{ instruction.step }}
               </li>
             </ol>
@@ -40,7 +40,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { mockGetRecipeFullDetails } from "../services/recipes.js";
 
@@ -50,12 +49,20 @@ export default {
       recipe: null
     };
   },
+  computed: {
+    recipeInstructions() {
+      return this.recipe?.analyzedInstructions?.[0]?.steps || [];
+    }
+  },
   async created() {
     try {
       const recipeId = parseInt(this.$route.params.id);
+      console.log("Fetching details for recipe ID:", recipeId); // Debug log
       const response = await mockGetRecipeFullDetails(recipeId);
+      console.log("Fetched recipe details:", response); // Debug log
       if (response.data && response.data.recipe) {
         this.recipe = response.data.recipe;
+        console.log("Recipe data set:", this.recipe); // Debug log
         // Update viewed status
         localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
       } else {
@@ -68,7 +75,6 @@ export default {
   }
 };
 </script>
-
 <style scoped>
 .container {
   max-width: 800px;
