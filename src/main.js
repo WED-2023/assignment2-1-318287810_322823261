@@ -47,7 +47,8 @@ axios.interceptors.response.use(
 );
 
 const shared_data = {
-  server_domain: "http://localhost:3000",
+  //server_domain: "http://localhost:3000",
+  server_domain: "http://recipesite.cs.bgu.ac.il",
   username: localStorage.getItem("username"),
   lastSearchQuery: localStorage.getItem("lastSearchQuery") || '',
   login(username) {
