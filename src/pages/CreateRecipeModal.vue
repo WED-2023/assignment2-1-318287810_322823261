@@ -64,6 +64,7 @@
   
   <script>
   import axios from 'axios';
+  import { createRecipe } from '@/services/user.js';
   
   export default {
     data() {
@@ -91,18 +92,32 @@
       },
       async onSubmit() {
         try {
-          await axios.post('http://localhost:3000/recipes', this.form);
-          console.log('Recipe created:', this.form);
-          this.hide();
+          console.log('Form data to send:', this.form);
+          console.log(this.axios);
+          const response = await createRecipe(this.form);
+          console.log('createRecipe.vue:', response);
+          if (response.status === 201) {
+            this.$bvToast.toast('Recipe created successfully!', {
+              title: 'Success',
+              variant: 'success',
+              solid: true
+            });
+            console.log('Recipe created:', this.form);
+            this.hide();
+          } else{
+            throw new Error('Failed to create recipe');
+          }
         } catch (error) {
-          console.error('Error creating recipe:', error);
+          console.error('Error creating recipe:', error.response || error);
+          this.$bvToast.toast('Failed to create recipe', {
+            title: 'Error',
+            variant: 'danger',
+            solid: true
+          });
         }
       },
     },
   };
   </script>
   
-  <style scoped>
-  /* הסגנונות שלך */
-  </style>
   
