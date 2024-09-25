@@ -14,7 +14,7 @@
 
 <script>
 import RecipePreview from '@/components/RecipePreview.vue';
-import { getFavoriteRecipes } from '@/services/recipes.js';
+import { getFavoriteRecipes } from '@/services/user.js';
 
 export default {
   components: {
@@ -29,8 +29,22 @@ export default {
     this.loadFavoriteRecipes();
   },
   methods: {
-    loadFavoriteRecipes() {
-      this.favoriteRecipes = getFavoriteRecipes();
+    async loadFavoriteRecipes() {
+      try {
+        const response = await getFavoriteRecipes();
+        console.log("response from getFavoriteRecipes: (FavoritesPage)", response);
+        this.favoriteRecipes = response;
+      } catch (err) {
+        console.error("Failed to load favorite recipes:", err);
+      }
+    },
+    async removeFromFavorites(recipe) {
+      try {
+        await removeFavorite(recipe.id);
+        this.favoriteRecipes = this.favoriteRecipes.filter(r => r.id !== recipe.id);
+      } catch (err) {
+        console.error("Failed to remove favorite recipe:", err);
+      }
     }
   }
 };
