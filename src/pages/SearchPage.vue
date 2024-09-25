@@ -36,14 +36,6 @@
           <option v-for="intolerance in intolerances" :key="intolerance" :value="intolerance">{{ intolerance }}</option>
         </select>
       </div>
-      <div>
-        <label for="sortBy">Sort by:</label>
-        <select v-model="sortBy">
-          <option value="">No Sort</option>
-          <option value="time">Preparation Time</option>
-          <option value="popularity">Popularity</option>
-        </select>
-      </div>
     </div>
     <div class="search-results">
       <div v-if="searchResults.length === 0">No results found</div>
@@ -53,8 +45,8 @@
           <div class="recipe-info">
             <h3>{{ recipe.title }}</h3>
             <p>Ready in {{ recipe.readyInMinutes }} minutes</p>
-            <p>Likes: {{ recipe.aggregateLikes }}</p>
-            <button @click="showRecipeDetails(recipe.id)">View Details</button>
+            <p>Likes: {{ recipe.popularity }}</p>
+            <button @click="viewDetails(recipe.id)">View Details</button>
           </div>
         </div>
       </div>
@@ -67,6 +59,8 @@ import { mockSearchRecipes } from "../services/recipes.js";
 import cuisines from "../assets/mocks/cuisines.json";
 import diets from "../assets/mocks/diets.json";
 import intolerances from "../assets/mocks/intolerances.json";
+import RecipePreviewList from '@/components/RecipePreviewList.vue';
+import { searchRecipes, fetchRandomRecipesFromServer } from '../services/recipes';
 
 export default {
   data() {
@@ -76,7 +70,6 @@ export default {
       selectedCuisine: '',
       selectedDiet: '',
       selectedIntolerance: '',
-      sortBy: '',
       cuisines,
       diets,
       intolerances,
@@ -84,18 +77,27 @@ export default {
     };
   },
   methods: {
-    searchRecipes() {
-      if (this.$root.store.username) {
-        this.$root.store.lastSearchQuery = this.searchQuery;
-        localStorage.setItem('lastSearchQuery', this.searchQuery);
-      }
+    async searchRecipes() {
+        try {
+          const response = await searchRecipes(
+            this.searchQuery,
+            this.selectedCuisine,
+            this.selectedDiet,
+            this.selectedIntolerance,
+            parseInt(this.numberOfRecipes)
+          );
+          console.log('Recipes found from SerchPage.vue:', response);
 
-      const response = mockSearchRecipes(this.searchQuery, this.numberOfRecipes, this.selectedCuisine, this.selectedDiet, this.selectedIntolerance, this.sortBy);
-      this.searchResults = response.data.recipes;
-    },
-    showRecipeDetails(recipeId) {
-      this.$router.push({ name: 'recipe', params: { id: recipeId } });
-    }
+          this.searchResults = response;
+          console.log("this.searchResults in searchPage.vue: ", this.searchResults);
+        } catch (error) {
+          console.error('Failed to search recipes:', error);
+          alert('Failed to search recipes. Please try again.');
+        }
+      },
+      viewDetails(recipeId) {
+        this.$router.push({ name: 'recipe', params: { id: recipeId } });
+      },
   },
   watch: {
     searchQuery: 'searchRecipes',
@@ -103,13 +105,14 @@ export default {
     selectedCuisine: 'searchRecipes',
     selectedDiet: 'searchRecipes',
     selectedIntolerance: 'searchRecipes',
-    sortBy: 'searchRecipes'
+    // sortBy: 'searchRecipes'
   },
   created() {
     if (this.$root.store.username && this.$root.store.lastSearchQuery) {
       this.searchQuery = this.$root.store.lastSearchQuery;
       this.searchRecipes();
     }
+    // this.fetchRandomRecipes();
   }
 };
 </script>
