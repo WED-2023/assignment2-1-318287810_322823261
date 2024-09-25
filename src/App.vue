@@ -42,7 +42,9 @@ export default {
     logout() {
       this.$root.store.logout();
       this.$root.toast("Logout", "User logged out successfully", "success");
+      localStorage.removeItem('loggedInUser');
       localStorage.removeItem('lastSearchQuery'); // מחיקת החיפוש האחרון רק בעת ההתנתקות
+      this.$root.$emit('logged-out');
       this.$router.push("/").catch(() => {
         this.$forceUpdate();
       });
