@@ -4,18 +4,29 @@
     
     <!-- Left Column - Random Recipes -->
     <div class="left-column">
-      <RecipePreviewList title="Random Recipes" class="RandomRecipes center" />
+      <RecipePreviewList :recipes="randomRecipesR.recipes" title="Explore this recipes" class="RandomRecipes center" />
+
       <b-button @click="fetchRandomRecipes" variant="info">Load New Random Recipes</b-button>
+      <div v-if="isLoadingRecipes">
+        <p>Loading random recipes...</p>
+      </div>
+      <!-- <div v-else>
+        <p>No recipes available.</p>
+      </div> -->
     </div>
     
     <!-- Right Column - Last Viewed Recipes or Login for Unregistered Users -->
     <div class="right-column">
-      <h2 v-if="$root.store.username">Last Viewed Recipes</h2>
-      <RecipePreviewList
+      <h2 v-if="$root.store.username"></h2>
+        <RecipePreviewList v-if="$root.store.username" 
+          :recipes="randomRecipesL.recipes" class="RandomRecipes center" />
+
+      <!-- <RecipePreviewList
         v-if="$root.store.username"
-        :recipeIds="viewedRecipeIds"
-        :class="{ RandomRecipes: true, blur: !$root.store.username, center: true }"
-      ></RecipePreviewList>
+        :recipeIds="randomRecipes.recipes"
+        :class="{ RandomRecipes: true, center: true }"
+      ></RecipePreviewList> -->
+
       
       <!-- Login Section for Unregistered Users -->
       <div v-else>
@@ -68,7 +79,7 @@
     </div>
     
     <!-- Create Recipe Modal Trigger -->
-    <b-button @click="showModal" variant="dark">Create Recipe</b-button>
+    <b-button v-if="store.username" @click="showModal" variant="dark">Create Recipe</b-button>
     <CreateRecipeModal ref="createRecipeModal" />
   </div>
 </template>
@@ -76,7 +87,10 @@
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
 import CreateRecipeModal from "@/pages/CreateRecipeModal.vue";
-import { mockLogin } from "../services/auth.js";
+//import { mockLogin, login } from "../services/auth.js";
+import { getRecipesPreview, getFavoriteRecipes, getRandomRecipes } from "../services/recipes"; // Update imports
+
+import { login } from "../services/auth.js";
 
 export default {
   components: {
@@ -85,6 +99,16 @@ export default {
   },
   data() {
     return {
+      recipes: [],
+      randomRecipesL: {
+        recipes: []
+      },
+      randomRecipesR: {
+        recipes: []
+      },
+      viewedRecipes: {
+        recipes: []
+      },
       viewedRecipeIds: [],
       loginData: {
         username: '',
@@ -92,13 +116,41 @@ export default {
       },
       form: {
         submitError: undefined
-      }
+      },
+      isLoadingRecipes: false
     };
   },
-  created() {
-    const viewedRecipes = JSON.parse(localStorage.getItem('viewedRecipes')) || [];
-    this.viewedRecipeIds = viewedRecipes;
+
+
+  async created() {
+    try {
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      console.log("Logged In User from localStorage:", loggedInUser);
+
+      this.$root.$on("user-logged-in", (username) => {
+        console.log("User logged in via event:", username);
+        this.store.username = username; // Update the store with the username
+      });
+      this.$root.$on("logged-out", this.clearForm);
+      await this.fetchRandomRecipes();
+      // await this.loadLastViewedRecipes();
+      if (loggedInUser) {
+        this.store.username = loggedInUser;
+      } else {
+        console.log("No logged in user, staying on the main page.");
+      }
+    } catch (error) {
+      console.error("Error during component creation:", error);
+    }
   },
+
+  computed: {
+    isLoggedIn() {
+      // בדיקה אם המשתמש מחובר מתוך ה-Vuex store
+      return localStorage.getItem('loggedInUser') != null;
+    }
+  },
+
   methods: {
     showModal() {
       if (this.$refs.createRecipeModal && this.$refs.createRecipeModal.show) {
@@ -107,24 +159,87 @@ export default {
         console.error('Modal ref not found or show method not defined');
       }
     },
-    fetchRandomRecipes() {
-      // Implement logic to fetch new random recipes
-      console.log('Fetching new random recipes...');
-    },
-    async login() {
+
+    async fetchRandomRecipes() {
+      this.isLoadingRecipes = true; // Show loading
       try {
-        const response = await mockLogin(this.loginData);
-        if (response.status === 200) {
-          this.$root.store.username = response.data.username; // Assuming response has username
-          localStorage.setItem('loggedInUser', response.data.username);
-          this.$router.push('/');
+        // Left side =>
+        const responseForLeft = await getRandomRecipes();
+        console.log('Random recipes fetched from MainPage: (LeftSide)', responseForLeft.data.recipes);
+        this.randomRecipesL = responseForLeft.data.recipes;
+
+        // Right side =>
+        const responseForRight = await getRandomRecipes();
+        console.log('Random recipes fetched from MainPage: (RightSide)', responseForRight.data.recipes);
+        this.randomRecipesR = responseForRight.data.recipes;
+
+      } catch (error) {
+        console.error('Error fetching random recipes:', error);
+        this.form.submitError = "Failed to load random recipes. Please try again.";
+      } finally {
+        this.isLoadingRecipes = false; // Hide loading
+      }
+    },
+
+    clearForm() {
+      this.loginData.username = ''; // איפוס השדות לאחר ההתנתקות
+      this.loginData.password = '';
+    },
+
+
+    async loadLastViewedRecipes() {
+      try {
+        const viewedRecipeIds = JSON.parse(localStorage.getItem('lastViewedRecipes')) || [];
+        console.log("lastViewedRecipes from MainPage:", viewedRecipeIds);
+        this.viewedRecipeIds = viewedRecipeIds;
+        console.log("this.lastViewedRecipes from MainPage:", this.viewedRecipeIds);
+        if (viewedRecipeIds.length > 0) {
+          // קריאה ל-API כדי לקבל את הפרטים המלאים של המתכונים
+          const recipes = await getRecipesPreview(viewedRecipeIds); 
+          console.log('viewedRecipes:', recipes);
+          
+          // שמירת המתכונים המלאים במשתנה
+          this.viewedRecipes = recipes;
         } else {
-          this.form.submitError = response.data.message;
+          this.viewedRecipes = []; // במקרה שאין מתכונים נצפים
         }
       } catch (error) {
-        this.form.submitError = error.message;
+          console.error('Error loading last viewed recipes:', error);
       }
-    }
+    },
+
+    async login() {
+      try {
+        const loginData = {
+          username: this.loginData.username,
+          password: this.loginData.password
+        };
+        console.log("Sending login request with data:", this.loginData);
+        const response = await login(loginData);
+        console.log("Response from server:", response);
+
+        if (response && response.success) {
+          localStorage.setItem('loggedInUser', this.loginData.username);
+          this.store.login(this.loginData.username); // שמירת המשתמש ב־shared_data
+          this.$root.$emit("user-logged-in", this.loginData.username);
+          if (this.$route.path !== "/") { // בדיקה אם כבר נמצא בדף הבית
+            this.$router.push("/"); // העברה לדף הבית
+          }
+        } else {
+          this.form.submitError = response.message || "Login failed. Please try again.";
+        }
+      } catch (error) {
+        console.log("Login error:", error);
+        this.form.submitError = error.message || "An error occurred during login.";
+      }
+    },
+    logout() {
+    this.$root.store.logout();
+    this.loginData.username = '';
+    this.loginData.password = ''; 
+    this.form.submitError = undefined;
+    this.$router.push("/login");
+  }
   }
 };
 </script>
