@@ -14,13 +14,13 @@
         </b-form-group>
 
         <b-form-group id="input-group-firstname" label="First Name:" label-for="firstname">
-          <b-form-input id="firstname" v-model="$v.form.firstName.$model" type="text" :state="validateState('firstName')"></b-form-input>
-          <b-form-invalid-feedback v-if="!$v.form.firstName.required">First name is required</b-form-invalid-feedback>
+          <b-form-input id="firstname" v-model="$v.form.firstname.$model" type="text" :state="validateState('firstname')"></b-form-input>
+          <b-form-invalid-feedback v-if="!$v.form.firstname.required">First name is required</b-form-invalid-feedback>
         </b-form-group>
 
         <b-form-group id="input-group-lastname" label="Last Name:" label-for="lastname">
-          <b-form-input id="lastname" v-model="$v.form.lastName.$model" type="text" :state="validateState('lastName')"></b-form-input>
-          <b-form-invalid-feedback v-if="!$v.form.lastName.required">Last name is required</b-form-invalid-feedback>
+          <b-form-input id="lastname" v-model="$v.form.lastname.$model" type="text" :state="validateState('lastname')"></b-form-input>
+          <b-form-invalid-feedback v-if="!$v.form.lastname.required">Last name is required</b-form-invalid-feedback>
         </b-form-group>
 
         <b-form-group id="input-group-email" label="Email:" label-for="email">
@@ -43,7 +43,7 @@
         <b-form-group id="input-group-confirmedPassword" label="Confirm Password:" label-for="confirmedPassword">
           <b-form-input id="confirmedPassword" type="password" v-model="$v.form.confirmedPassword.$model" :state="validateState('confirmedPassword')"></b-form-input>
           <b-form-invalid-feedback v-if="!$v.form.confirmedPassword.required">Password confirmation is required</b-form-invalid-feedback>
-          <b-form-invalid-feedback v-if="$v.form.confirmedPassword.sameAsPassword.$invalid">The confirmed password is not equal to the original password</b-form-invalid-feedback>
+          <b-form-invalid-feedback v-if="!$v.form.confirmedPassword.sameAsPassword">The confirmed password is not equal to the original password</b-form-invalid-feedback>
         </b-form-group>
 
         <b-button type="reset" variant="danger">Reset</b-button>
@@ -61,9 +61,10 @@
 </template>
 
 <script>
+import axios from "axios";
 import countries from "../assets/countries";
 import { required, minLength, maxLength, alpha, sameAs, email, helpers } from "vuelidate/lib/validators";
-import { mockRegister } from "../services/auth.js";
+import { mockRegister , register } from "../services/auth.js";
 
 const passwordComplexity = helpers.regex(
   "passwordComplexity",
@@ -76,8 +77,8 @@ export default {
     return {
       form: {
         username: "",
-        firstName: "",
-        lastName: "",
+        firstname: "",
+        lastname: "",
         country: null,
         password: "",
         confirmedPassword: "",
@@ -96,10 +97,10 @@ export default {
         length: (u) => minLength(3)(u) && maxLength(8)(u),
         alpha
       },
-      firstName: {
+      firstname: {
         required
       },
-      lastName: {
+      lastname: {
         required
       },
       email: {
@@ -133,15 +134,16 @@ export default {
         const userDetails = {
           username: this.form.username,
           password: this.form.password,
-          firstName: this.form.firstName,
-          lastName: this.form.lastName,
+          firstname: this.form.firstname,
+          lastname: this.form.lastname,
           country: this.form.country,
           email: this.form.email
         };
 
-        const response = mockRegister(userDetails);
+        // const response = mockRegister(userDetails);
+        const response = await axios.post("https://recipesite.cs.bgu.ac.il/register", userDetails);
 
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           this.$router.push("/login");
         } else {
           this.form.submitError = response.response.data.message;
@@ -150,18 +152,19 @@ export default {
         this.form.submitError = err.response.data.message;
       }
     },
-    onRegister() {
+    async onRegister() {
+      console.log("Register button clicked");
       this.$v.form.$touch();
       if (this.$v.form.$anyError) {
         return;
       }
-      this.Register();
+      await this.Register();
     },
     onReset() {
       this.form = {
         username: "",
-        firstName: "",
-        lastName: "",
+        firstname: "",
+        lastname: "",
         country: null,
         password: "",
         confirmedPassword: "",
