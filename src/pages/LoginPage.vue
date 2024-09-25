@@ -32,7 +32,7 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import { mapActions } from 'vuex';
-import { mockLogin } from "../services/auth.js";
+import { mockLogin , login} from "../services/auth.js";
 
 export default {
   name: "Login",
@@ -61,6 +61,7 @@ export default {
       return $dirty ? !$error : null;
     },
     async onLogin() {
+      console.log("login button clicked");
       this.form.submitError = undefined;
       this.$v.form.$touch();
       if (this.$v.form.$anyError) {
@@ -68,24 +69,29 @@ export default {
       }
 
       try {
-        const response = await mockLogin(this.form); // Assuming mockLogin handles login
+        const loginData = {
+          username: this.form.username,
+          password: this.form.password
+        };
+        console.log("Sending login request with data:", loginData);
 
-        if (response.status === 200) {
+        const response = await login(loginData); 
+        // const response = await login(this.form); // Assuming mockLogin handles login
+        console.log("Response from login:", response);
+
+        if (response && response.success) {
+          console.log("Login successful:", response.message);
+          localStorage.setItem('loggedInUser', this.form.username);
           // Update Vuex store to indicate user is logged in
-          this.$store.commit('SET_LOGIN_STATUS', true);
+          this.$root.store.login(this.form.username);
+          this.$router.push("/"); // Redirect to the main page
 
-          // Check if there's a redirect path stored in localStorage
-          const redirectPath = localStorage.getItem('redirectPath');
-          if (redirectPath) {
-            localStorage.removeItem('redirectPath'); // Clear the redirect path
-            this.$router.push(redirectPath); // Redirect to the stored path
-          } else {
-            this.$router.push("/"); // Redirect to the main page
-          }
         } else {
-          this.form.submitError = response.data.message; // Show login error message
+          this.form.submitError = response.message; // Show login error message
+          console.log("Login failed:", response.message);
         }
       }catch (error) {
+        console.log("Login error:", error);
         this.form.submitError = "An error occurred during login.";
       }
     },
