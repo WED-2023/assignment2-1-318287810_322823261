@@ -1,5 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
+import store from './store';
 import VueAxios from "vue-axios";
 import axios from "axios";
 import './scss/form-style.scss';
@@ -17,6 +18,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 library.add(faClock, fasHeart, farHeart ,faLeaf, faCarrot, faBreadSlice, faThumbsUp, faEye);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+// axios.defaults.withCredentials = true;
 
 const router = new VueRouter({
   routes,
@@ -57,7 +60,7 @@ const shared_data = {
     console.log("login", this.username);
   },
   logout() {
-    console.log("logout");
+    console.log("logout main.js");
     localStorage.removeItem("username");
     localStorage.removeItem("lastSearchQuery");
     this.username = undefined;
@@ -89,6 +92,7 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  store,
   data: shared_data,
   render: (h) => h(App),
 }).$mount("#app");
