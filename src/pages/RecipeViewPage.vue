@@ -42,7 +42,8 @@
 </template>
 
 <script>
-import { mockGetRecipeFullDetails } from "../services/recipes.js";
+//import { mockGetRecipeFullDetails } from "../services/recipes.js";
+import { getRecipeFullDetails } from "../services/recipes.js";
 
 export default {
   data() {
@@ -58,20 +59,51 @@ export default {
   async created() {
     try {
       const recipeId = parseInt(this.$route.params.id);
+      console.log("this.$route.params.id in RecipeViewPage.vue: ", this.$route.params.id);
       console.log("Fetching details for recipe ID:", recipeId); // Debug log
-      const response = await mockGetRecipeFullDetails(recipeId);
-      console.log("Fetched recipe details:", response); // Debug log
-      if (response.data && response.data.recipe) {
-        this.recipe = response.data.recipe;
-        console.log("Recipe data set:", this.recipe); // Debug log
-        // Update viewed status
-        localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
+
+      const response = await getRecipeFullDetails(recipeId);
+      console.log("Fetched recipe details:", response);
+      
+      if (response) {
+        this.recipe = response;
+        console.log("Recipe data set:", this.recipe);
+        this.saveRecipeToLastViewed(recipeId);
+
+
+//      const response = await mockGetRecipeFullDetails(recipeId);
+//      console.log("Fetched recipe details:", response); // Debug log
+//      if (response.data && response.data.recipe) {
+//        this.recipe = response.data.recipe;
+//        console.log("Recipe data set:", this.recipe); // Debug log
+//        // Update viewed status
+//        localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
+
       } else {
         this.recipe = null;
       }
     } catch (error) {
       console.error("Error fetching recipe details:", error);
       this.recipe = null;
+    }
+  },
+  methods: {
+    saveRecipeToLastViewed(recipeId) {
+      const lastViewedRecipes = JSON.parse(localStorage.getItem('lastViewedRecipes')) || [];
+      
+      // הסרת מתכון אם כבר קיים ברשימה
+      const updatedRecipes = lastViewedRecipes.filter(id => id !== recipeId);
+      
+      // הוספת מתכון חדש לרשימה
+      updatedRecipes.unshift(recipeId);
+
+      // שמירת מקסימום 3 מתכונים
+      if (updatedRecipes.length > 3) {
+        updatedRecipes.pop();
+      }
+
+      // שמירת הרשימה המעודכנת ב-localStorage
+      localStorage.setItem('lastViewedRecipes', JSON.stringify(updatedRecipes));
     }
   }
 };
