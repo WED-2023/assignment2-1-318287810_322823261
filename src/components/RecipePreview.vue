@@ -24,6 +24,9 @@
 </template>
 
 <script>
+import { addFavorite, removeFavorite, isFavorite } from '../services/user.js';
+import { isRecipeWatched } from '../services/recipes.js';
+
 export default {
   data() {
     return {
@@ -39,7 +42,13 @@ export default {
       required: true
     }
   },
-  mounted() {
+  async mounted() {
+    console.log('Recipe details in RecipePreview:', this.recipe);
+    console.log('recipePreview.vue: test the this.recipe.id', this.recipe.id);
+    if (!this.recipe.id) {
+      console.error('Error: recipe.id is undefined.');
+      return;
+    }
     const img = new Image();
     img.src = this.recipe.image;
     img.onload = () => {
@@ -52,31 +61,43 @@ export default {
     // בדיקה אם המשתמש כבר צפה במתכון
     this.hasViewed = localStorage.getItem(`viewed_${this.recipe.id}`) === 'true';
 
-    // בדיקה אם המתכון במועדפים
-    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
-    this.isFavorite = favoriteRecipes.includes(this.recipe.id);
+    try {
+      console.log("recipePreview.vue: test the this.recipe.id", this.recipe.id);
+      this.isFavorite = await isFavorite(this.recipe.id);
+      console.log("recipePreview.vue: test the isFavorite", this.isFavorite);
+    } catch (error) {
+      console.error("Error checking if recipe is favorite:", error);
+    }
+    // const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+    // this.isFavorite = favoriteRecipes.includes(this.recipe.id);
   },
   methods: {
-    toggleFavorite() {
-      let favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
-      if (this.isFavorite) {
-        favoriteRecipes = favoriteRecipes.filter(id => id !== this.recipe.id);
-      } else {
-        favoriteRecipes.push(this.recipe.id);
+    async toggleFavorite() {
+      try {
+        if (this.isFavorite) {
+          await removeFavorite(this.recipe.id);
+        } else {
+          await addFavorite(this.recipe.id);
+        }
+        this.isFavorite = !this.isFavorite; // Toggle the state after the action succeeds
+      } catch (error) {
+        console.error("Error toggling favorite status:", error);
       }
-      localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
-      this.isFavorite = !this.isFavorite;
     },
     markAsViewed() {
-      localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
-      this.hasViewed = true;
+      // localStorage.setItem(`viewed_${this.recipe.id}`, 'true');
+      // this.hasViewed = true;
 
       // הוספה לרשימת מתכונים שנצפו לאחרונה
       let viewedRecipes = JSON.parse(localStorage.getItem('viewedRecipes')) || [];
       if (!viewedRecipes.includes(this.recipe.id)) {
         viewedRecipes.push(this.recipe.id);
-        localStorage.setItem('viewedRecipes', JSON.stringify(viewedRecipes));
+        if (viewedRecipes.length > 3) {
+        viewedRecipes.shift(); // מוחקת את המתכון הישן ביותר
       }
+      localStorage.setItem('viewedRecipes', JSON.stringify(viewedRecipes));
+    }
+    this.hasViewed = true;
     }
   }
 };
