@@ -1,164 +1,84 @@
-<template>
-  <div class="container">
-    <h1 class="title">Search Page</h1>
-    <div class="search-controls">
-      <input 
-        v-model="searchQuery" 
-        type="text" 
-        placeholder="Search for recipes..."
-      />
-      <div>
-        <label for="numberOfRecipes">Number of recipes:</label>
-        <select v-model="numberOfRecipes">
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-        </select>
-      </div>
-      <div>
-        <label for="selectedCuisine">Cuisine:</label>
-        <select v-model="selectedCuisine">
-          <option value="">No Filter</option>
-          <option v-for="cuisine in cuisines" :key="cuisine" :value="cuisine">{{ cuisine }}</option>
-        </select>
-      </div>
-      <div>
-        <label for="selectedDiet">Diet:</label>
-        <select v-model="selectedDiet">
-          <option value="">No Filter</option>
-          <option v-for="diet in diets" :key="diet" :value="diet">{{ diet }}</option>
-        </select>
-      </div>
-      <div>
-        <label for="selectedIntolerance">Intolerance:</label>
-        <select v-model="selectedIntolerance">
-          <option value="">No Filter</option>
-          <option v-for="intolerance in intolerances" :key="intolerance" :value="intolerance">{{ intolerance }}</option>
-        </select>
-      </div>
-    </div>
-    <div class="search-results">
-      <div v-if="searchResults.length === 0">No results found</div>
-      <div v-else>
-        <div v-for="recipe in searchResults" :key="recipe.id" class="recipe-item">
-          <img :src="recipe.image" :alt="recipe.title" @click="showRecipeDetails(recipe.id)" />
-          <div class="recipe-info">
-            <h3>{{ recipe.title }}</h3>
-            <p>Ready in {{ recipe.readyInMinutes }} minutes</p>
-            <p>Likes: {{ recipe.popularity }}</p>
-            <button @click="viewDetails(recipe.id)">View Details</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script>
-import { mockSearchRecipes } from "../services/recipes.js";
-import cuisines from "../assets/mocks/cuisines.json";
-import diets from "../assets/mocks/diets.json";
-import intolerances from "../assets/mocks/intolerances.json";
-import RecipePreviewList from '@/components/RecipePreviewList.vue';
-import { searchRecipes, fetchRandomRecipesFromServer } from '../services/recipes';
-
-export default {
-  data() {
-    return {
-      searchQuery: this.$root.store.lastSearchQuery || '',
-      numberOfRecipes: 5,
-      selectedCuisine: '',
-      selectedDiet: '',
-      selectedIntolerance: '',
-      cuisines,
-      diets,
-      intolerances,
-      searchResults: []
-    };
-  },
-  methods: {
-    async searchRecipes() {
-        try {
-          const response = await searchRecipes(
-            this.searchQuery,
-            this.selectedCuisine,
-            this.selectedDiet,
-            this.selectedIntolerance,
-            parseInt(this.numberOfRecipes)
-          );
-          console.log('Recipes found from SerchPage.vue:', response);
-
-          this.searchResults = response;
-          console.log("this.searchResults in searchPage.vue: ", this.searchResults);
-        } catch (error) {
-          console.error('Failed to search recipes:', error);
-          alert('Failed to search recipes. Please try again.');
-        }
-      },
-      viewDetails(recipeId) {
-        this.$router.push({ name: 'recipe', params: { id: recipeId } });
-      },
-  },
-  watch: {
-    searchQuery: 'searchRecipes',
-    numberOfRecipes: 'searchRecipes',
-    selectedCuisine: 'searchRecipes',
-    selectedDiet: 'searchRecipes',
-    selectedIntolerance: 'searchRecipes',
-    // sortBy: 'searchRecipes'
-  },
-  created() {
-    if (this.$root.store.username && this.$root.store.lastSearchQuery) {
-      this.searchQuery = this.$root.store.lastSearchQuery;
-      this.searchRecipes();
-    }
-    // this.fetchRandomRecipes();
-  }
-};
-</script>
-
-<style scoped>
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+body {
+  font-family: 'Arial',Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #b6a6c9 ;
 }
 
-.search-controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+h1, h2, h3, h4, h5, h6 {
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  background-color: #4a3058;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #4a3058;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #7372c6;
+  outline: none;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.form-group {
   margin-bottom: 20px;
 }
 
-.search-controls > div {
-  margin-bottom: 10px;
+.b-form-invalid-feedback {
+  color: #d9534f;
+  margin-top: 5px;
 }
 
-.search-controls input, .search-controls select {
-  padding: 5px;
-  margin-right: 10px;
+.b-alert {
+  margin-top: 20px;
 }
 
-.search-results {
-  display: flex;
-  flex-direction: column;
+button:focus {
+  outline: 3px solid #42a5b9;
 }
 
-.recipe-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+a {
+  color: #4e4794;
+  text-decoration: none;
 }
 
-.recipe-item img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  cursor: pointer;
+a:hover {
+  text-decoration: underline;
 }
 
-.recipe-info {
-  margin-left: 10px;
+.text-center {
+  text-align: center;
 }
-</style>
